@@ -16,6 +16,16 @@
 },
 {
   "directory": "/home/khaled/school/ParametricVisions/build",
+  "command": "/usr/bin/c++ -DIMGUI_IMPL_OPENGL_LOADER_GLAD=ON -I/home/khaled/school/ParametricVisions/src -I/home/khaled/school/ParametricVisions/include/glad/include -I/home/khaled/school/ParametricVisions/include/glfw-3.3.2/include -isystem /home/khaled/school/ParametricVisions/include/argh-1.3.1 -isystem /home/khaled/school/ParametricVisions/include/vivid-2.2.1/include -isystem /home/khaled/school/ParametricVisions/include/vivid-2.2.1/dependencies/glm -isystem /home/khaled/school/ParametricVisions/include/glm-0.9.9.7 -isystem /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5 -fdiagnostics-color=always -Wall -pedantic -Wconversion -std=gnu++17 -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp",
+  "file": "/home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp"
+},
+{
+  "directory": "/home/khaled/school/ParametricVisions/build",
+  "command": "/usr/bin/c++ -DIMGUI_IMPL_OPENGL_LOADER_GLAD=ON -I/home/khaled/school/ParametricVisions/src -I/home/khaled/school/ParametricVisions/include/glad/include -I/home/khaled/school/ParametricVisions/include/glfw-3.3.2/include -isystem /home/khaled/school/ParametricVisions/include/argh-1.3.1 -isystem /home/khaled/school/ParametricVisions/include/vivid-2.2.1/include -isystem /home/khaled/school/ParametricVisions/include/vivid-2.2.1/dependencies/glm -isystem /home/khaled/school/ParametricVisions/include/glm-0.9.9.7 -isystem /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5 -fdiagnostics-color=always -Wall -pedantic -Wconversion -std=gnu++17 -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp",
+  "file": "/home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp"
+},
+{
+  "directory": "/home/khaled/school/ParametricVisions/build",
   "command": "/usr/bin/c++ -DIMGUI_IMPL_OPENGL_LOADER_GLAD=ON -I/home/khaled/school/ParametricVisions/src -I/home/khaled/school/ParametricVisions/include/glad/include -I/home/khaled/school/ParametricVisions/include/glfw-3.3.2/include -isystem /home/khaled/school/ParametricVisions/include/argh-1.3.1 -isystem /home/khaled/school/ParametricVisions/include/vivid-2.2.1/include -isystem /home/khaled/school/ParametricVisions/include/vivid-2.2.1/dependencies/glm -isystem /home/khaled/school/ParametricVisions/include/glm-0.9.9.7 -isystem /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5 -fdiagnostics-color=always -Wall -pedantic -Wconversion -std=gnu++17 -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_tables.cpp",
   "file": "/home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_tables.cpp"
 },

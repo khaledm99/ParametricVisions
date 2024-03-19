@@ -111,10 +111,38 @@ CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_draw.cpp.s: cmake_forc
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_draw.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_draw.cpp -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_draw.cpp.s
 
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o: CMakeFiles/visions.dir/flags.make
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o: ../include/imgui-docking-1.90.5/imgui_impl_glfw.cpp
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o -MF CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o.d -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp
+
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp > CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i
+
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s
+
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o: CMakeFiles/visions.dir/flags.make
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o: ../include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o -MF CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o.d -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp
+
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp > CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i
+
+CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s
+
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o: ../include/imgui-docking-1.90.5/imgui_tables.cpp
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o -MF CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o.d -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_tables.cpp
 
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.i: cmake_force
@@ -128,7 +156,7 @@ CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.s: cmake_fo
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o: ../include/imgui-docking-1.90.5/imgui_widgets.cpp
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o -MF CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o.d -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o -c /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_widgets.cpp
 
 CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.i: cmake_force
@@ -142,7 +170,7 @@ CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.s: cmake_f
 CMakeFiles/visions.dir/src/main.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/visions.dir/src/main.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/visions.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/visions.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/src/main.cpp.o -MF CMakeFiles/visions.dir/src/main.cpp.o.d -o CMakeFiles/visions.dir/src/main.cpp.o -c /home/khaled/school/ParametricVisions/src/main.cpp
 
 CMakeFiles/visions.dir/src/main.cpp.i: cmake_force
@@ -158,6 +186,8 @@ visions_OBJECTS = \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui.cpp.o" \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_demo.cpp.o" \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_draw.cpp.o" \
+"CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o" \
+"CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o" \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o" \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o" \
 "CMakeFiles/visions.dir/src/main.cpp.o"
@@ -168,6 +198,8 @@ visions_EXTERNAL_OBJECTS =
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui.cpp.o
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_demo.cpp.o
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_draw.cpp.o
+visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o
+visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o
 visions: CMakeFiles/visions.dir/src/main.cpp.o
@@ -178,7 +210,7 @@ visions: /usr/lib/x86_64-linux-gnu/librt.a
 visions: /usr/lib/x86_64-linux-gnu/libm.so
 visions: /usr/lib/x86_64-linux-gnu/libX11.so
 visions: CMakeFiles/visions.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable visions"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable visions"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/visions.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -285,6 +285,54 @@ include/imgui-docking-1.90.5/imgui_draw.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_draw.cpp.s
 .PHONY : include/imgui-docking-1.90.5/imgui_draw.cpp.s
 
+include/imgui-docking-1.90.5/imgui_impl_glfw.o: include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_glfw.o
+
+# target to build an object file
+include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.o
+
+include/imgui-docking-1.90.5/imgui_impl_glfw.i: include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_glfw.i
+
+# target to preprocess a source file
+include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.i
+
+include/imgui-docking-1.90.5/imgui_impl_glfw.s: include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_glfw.s
+
+# target to generate assembly for a file
+include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_glfw.cpp.s
+
+include/imgui-docking-1.90.5/imgui_impl_opengl3.o: include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_opengl3.o
+
+# target to build an object file
+include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o
+
+include/imgui-docking-1.90.5/imgui_impl_opengl3.i: include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_opengl3.i
+
+# target to preprocess a source file
+include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.i
+
+include/imgui-docking-1.90.5/imgui_impl_opengl3.s: include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_opengl3.s
+
+# target to generate assembly for a file
+include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s
+.PHONY : include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.s
+
 include/imgui-docking-1.90.5/imgui_tables.o: include/imgui-docking-1.90.5/imgui_tables.cpp.o
 .PHONY : include/imgui-docking-1.90.5/imgui_tables.o
 
@@ -382,6 +430,12 @@ help:
 	@echo "... include/imgui-docking-1.90.5/imgui_draw.o"
 	@echo "... include/imgui-docking-1.90.5/imgui_draw.i"
 	@echo "... include/imgui-docking-1.90.5/imgui_draw.s"
+	@echo "... include/imgui-docking-1.90.5/imgui_impl_glfw.o"
+	@echo "... include/imgui-docking-1.90.5/imgui_impl_glfw.i"
+	@echo "... include/imgui-docking-1.90.5/imgui_impl_glfw.s"
+	@echo "... include/imgui-docking-1.90.5/imgui_impl_opengl3.o"
+	@echo "... include/imgui-docking-1.90.5/imgui_impl_opengl3.i"
+	@echo "... include/imgui-docking-1.90.5/imgui_impl_opengl3.s"
 	@echo "... include/imgui-docking-1.90.5/imgui_tables.o"
 	@echo "... include/imgui-docking-1.90.5/imgui_tables.i"
 	@echo "... include/imgui-docking-1.90.5/imgui_tables.s"
