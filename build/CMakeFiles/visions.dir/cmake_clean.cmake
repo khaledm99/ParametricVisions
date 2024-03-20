@@ -15,6 +15,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o.d"
   "CMakeFiles/visions.dir/src/main.cpp.o"
   "CMakeFiles/visions.dir/src/main.cpp.o.d"
+  "CMakeFiles/visions.dir/src/shader.cpp.o"
+  "CMakeFiles/visions.dir/src/shader.cpp.o.d"
+  "CMakeFiles/visions.dir/src/ui.cpp.o"
+  "CMakeFiles/visions.dir/src/ui.cpp.o.d"
   "visions"
   "visions.pdb"
 )

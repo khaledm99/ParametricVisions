@@ -16,6 +16,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_tables.cpp" "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o" "gcc" "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o.d"
   "/home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_widgets.cpp" "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o" "gcc" "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o.d"
   "/home/khaled/school/ParametricVisions/src/main.cpp" "CMakeFiles/visions.dir/src/main.cpp.o" "gcc" "CMakeFiles/visions.dir/src/main.cpp.o.d"
+  "/home/khaled/school/ParametricVisions/src/shader.cpp" "CMakeFiles/visions.dir/src/shader.cpp.o" "gcc" "CMakeFiles/visions.dir/src/shader.cpp.o.d"
+  "/home/khaled/school/ParametricVisions/src/ui.cpp" "CMakeFiles/visions.dir/src/ui.cpp.o" "gcc" "CMakeFiles/visions.dir/src/ui.cpp.o.d"
   )
 
 # Targets to which this target links.

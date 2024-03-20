@@ -18,6 +18,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../include/glfw-3.3.2/src/glfw3.pc.in"
   "../include/glfw-3.3.2/src/glfw3Config.cmake.in"
   "../include/glfw-3.3.2/src/glfw_config.h.in"
+  "../src/shaders/shader.fs"
+  "../src/shaders/shader.vs"
   "/usr/share/cmake-3.22/Modules/BasicConfigVersion-SameMajorVersion.cmake.in"
   "/usr/share/cmake-3.22/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake"
@@ -64,6 +66,8 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "shaders/shader.fs"
+  "shaders/shader.vs"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   "include/glad/CMakeFiles/CMakeDirectoryInformation.cmake"
   "include/glfw-3.3.2/src/glfw3Config.cmake"
