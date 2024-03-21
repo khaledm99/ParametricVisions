@@ -7,7 +7,9 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <assert.h>
 
+#include "Renderer.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -32,8 +34,8 @@ void processInput(GLFWwindow *window)
 int main()
 {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(800,600, "ParametricVisions", NULL, NULL);
@@ -144,8 +146,8 @@ int main()
         // Render
         //glUseProgram(shaderProgram);
         s.use();
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+        GLCall(glBindVertexArray(VAO));
+        GLCall(glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0));
         glBindVertexArray(0);
         
         //ui.render();
