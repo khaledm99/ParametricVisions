@@ -1,16 +1,16 @@
-#include "ui.h"
-#include "shader.h"
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "ui.h"
+#include "shader.h"
 #include "object.h"
 
 #include <stdio.h>
 #include <iostream>
 
+#include "VertexBuffer.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -126,15 +126,18 @@ int main()
     //glGenBuffers(1,&EBO);
     
 
-    unsigned int VBO;
-    glGenBuffers(1,&VBO);
+    //unsigned int VBO;
+    //glGenBuffers(1,&VBO);
+
+    VertexBuffer vb(vertices, sizeof(vertices));
+    
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
     // 2. copy our vertices array in a vertex buffer for OpenGL to use
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+   // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // 3. copy our index array in a element buffer for OpenGL to use
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);

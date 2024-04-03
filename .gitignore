@@ -32,3 +32,8 @@
 *.exe
 *.out
 *.app
+
+build/*
+out/*
+CMakeSettings.json
+.vs/*
