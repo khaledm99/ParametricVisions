@@ -178,13 +178,51 @@ int main()
 
     Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
 
+    // Framebuffer
+    unsigned int fb;
+    glGenFramebuffers(1, &fb);
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glViewport(0,0,800,600);
 
+    unsigned int texColBuf;
+    glGenTextures(1, &texColBuf);
+    glBindTexture(GL_TEXTURE_2D, texColBuf);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0); // unbind texture after setting up
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColBuf, 0);
+
+    unsigned int rbo;
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0); // unbind renderbuffer after setting up
+    
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        std::cout<< "ERROR: Framebuffer is not complete" << std::endl;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);   // unbind our framebuffer after setting up
+
+    auto vs = ui.viewportSize;
+    vs.x = 800.f;
+    vs.y = 600.f;
     while(!glfwWindowShouldClose(window))
     {
+        
         glfwPollEvents();
         processInput(window);
 
+
+        
+
         // Set wireframe mode
+        glBindFramebuffer(GL_FRAMEBUFFER, fb);
         if(wire)
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         else
@@ -193,14 +231,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
 
-        // UI 
-        /*
-        bool change = false;
-
-        change |= ui.beginMainWindow();
-        change |= ui.showConfig();
-        ui.endMainWindowAndRender();
-        */
+        
 
         // Render
         //glUseProgram(shaderProgram);
@@ -210,7 +241,10 @@ int main()
         glm::mat4 view = glm::mat4(1.f);
         view = glm::translate(view, glm::vec3(0.f,0.f,-3.f));
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.f),800.f/600.f,0.1f,100.f);
+        //std::cout<<vs.x/vs.y<<std::endl;
+        float aspect = vs.x/vs.y;
+        //float aspect = 800.f/600.f;
+        projection = glm::perspective(glm::radians(45.f),aspect,0.1f,100.f);
         
         int modelLoc = glGetUniformLocation(s.id,"model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -224,9 +258,50 @@ int main()
         //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // UI 
         
-        //ui.render();
+        bool change = false;
+
+        change |= ui.beginMainWindow();
+        change |= ui.showConfig(texColBuf);
+        ui.endMainWindowAndRender();
+        
+        ui.render();
         glfwSwapBuffers(window);
+        if(vs.x != ui.viewportSize.x || vs.y != ui.viewportSize.y)
+        {
+            vs = ui.viewportSize;
+            glGenFramebuffers(1, &fb);
+            glBindFramebuffer(GL_FRAMEBUFFER, fb);
+            glViewport(0,0,vs.x,vs.y);
+
+            glGenTextures(1, &texColBuf);
+            glBindTexture(GL_TEXTURE_2D, texColBuf);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, vs.x, vs.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glBindTexture(GL_TEXTURE_2D, 0); // unbind texture after setting up
+
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColBuf, 0);
+
+            glGenRenderbuffers(1, &rbo);
+            glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, vs.x, vs.y);
+            glBindRenderbuffer(GL_RENDERBUFFER, 0); // unbind renderbuffer after setting up
+            
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+            if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            {
+                std::cout<< "ERROR: Framebuffer is not complete" << std::endl;
+            }
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);   // unbind our framebuffer after setting up
+
+        }
     }
 
     ImGui_ImplOpenGL3_Shutdown();

@@ -9,11 +9,12 @@ class UI {
         GLFWwindow* window;
 
     public:
+        ImVec2 viewportSize;
         bool wire = false;
         void setWindow(GLFWwindow* w);
         void initImGui();
         bool beginMainWindow();
         void endMainWindowAndRender();
-        bool showConfig();
+        bool showConfig(unsigned int texColBuf);
         void render();
 };

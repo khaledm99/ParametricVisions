@@ -112,11 +112,15 @@ void UI::endMainWindowAndRender()
 {
     ImGui::End();
 }
-bool UI::showConfig()
+bool UI::showConfig(unsigned int texColBuf)
 {
     bool change = false;
     ImGui::Begin("Config");
     change |= ImGui::Checkbox("Toggle Wireframe", &wire);
+    ImGui::End();
+    ImGui::Begin("Viewport");
+    viewportSize = ImGui::GetContentRegionAvail();
+    ImGui::Image((ImTextureID)texColBuf, viewportSize); 
     ImGui::End();
     return change;
 }
