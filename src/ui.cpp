@@ -112,15 +112,20 @@ void UI::endMainWindowAndRender()
 {
     ImGui::End();
 }
-bool UI::showConfig(unsigned int texColBuf)
+bool UI::showConfig()
 {
     bool change = false;
     ImGui::Begin("Config");
     change |= ImGui::Checkbox("Toggle Wireframe", &wire);
     ImGui::End();
+    return change;
+}
+bool UI::showViewport(unsigned int texColBuf)
+{
+    bool change = false;
     ImGui::Begin("Viewport");
     viewportSize = ImGui::GetContentRegionAvail();
-    ImGui::Image((ImTextureID)texColBuf, viewportSize); 
+    ImGui::Image((ImTextureID)texColBuf, viewportSize, ImVec2(0.f,1.f), ImVec2(1.f,0.f)); 
     ImGui::End();
     return change;
 }
@@ -128,5 +133,10 @@ void UI::render()
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+ImVec2 UI::getViewportSize()
+{
+    return viewportSize;
 }
 

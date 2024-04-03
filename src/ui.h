@@ -7,14 +7,16 @@
 class UI {
     private:
         GLFWwindow* window;
+        ImVec2 viewportSize;
 
     public:
-        ImVec2 viewportSize;
         bool wire = false;
         void setWindow(GLFWwindow* w);
         void initImGui();
         bool beginMainWindow();
         void endMainWindowAndRender();
-        bool showConfig(unsigned int texColBuf);
+        bool showConfig();
+        bool showViewport(unsigned int texColBuf);
         void render();
+        ImVec2 getViewportSize();
 };

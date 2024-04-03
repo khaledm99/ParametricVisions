@@ -209,7 +209,7 @@ int main()
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);   // unbind our framebuffer after setting up
 
-    auto vs = ui.viewportSize;
+    auto vs = ui.getViewportSize();
     vs.x = 800.f;
     vs.y = 600.f;
     while(!glfwWindowShouldClose(window))
@@ -223,7 +223,7 @@ int main()
 
         // Set wireframe mode
         glBindFramebuffer(GL_FRAMEBUFFER, fb);
-        if(wire)
+        if(ui.wire)
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         else
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
@@ -266,14 +266,15 @@ int main()
         bool change = false;
 
         change |= ui.beginMainWindow();
-        change |= ui.showConfig(texColBuf);
+        change |= ui.showConfig();
+        change |= ui.showViewport(texColBuf);
         ui.endMainWindowAndRender();
         
         ui.render();
         glfwSwapBuffers(window);
-        if(vs.x != ui.viewportSize.x || vs.y != ui.viewportSize.y)
+        if(vs.x != ui.getViewportSize().x || vs.y != ui.getViewportSize().y)
         {
-            vs = ui.viewportSize;
+            vs = ui.getViewportSize();
             glGenFramebuffers(1, &fb);
             glBindFramebuffer(GL_FRAMEBUFFER, fb);
             glViewport(0,0,vs.x,vs.y);
