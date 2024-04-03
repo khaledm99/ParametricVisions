@@ -1,5 +1,7 @@
 # Build Directory
 ./build/*
+out/*
+build/*
 # Prerequisites
 *.d
 
@@ -32,3 +34,6 @@
 *.exe
 *.out
 *.app
+
+.vs/*
+CMakeSettings.json
