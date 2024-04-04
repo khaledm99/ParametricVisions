@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "object.h"
+#include "Triangle.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -176,7 +177,10 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
+    Shader s("./shaders/shader.vs", "./shaders/shader.fs");
+
+    Triangle tri(glm::vec3(0.7f, 0.7f, 1), glm::vec3(0.f, 0.f, 1), glm::vec3(-0.7f, 0.7f, 1));
+
 
 
     while(!glfwWindowShouldClose(window))
@@ -224,6 +228,8 @@ int main()
         //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
+
+        tri.draw();
         
         //ui.render();
         glfwSwapBuffers(window);

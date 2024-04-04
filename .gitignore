@@ -32,3 +32,8 @@
 *.exe
 *.out
 *.app
+
+#stuff of rahats
+.vs/*
+out/*
+CMakeSettings.json
