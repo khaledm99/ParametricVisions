@@ -176,7 +176,7 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader s("./shaders/shader.vs", "./shaders/shader.fs");
+    Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
 
 
     while(!glfwWindowShouldClose(window))
