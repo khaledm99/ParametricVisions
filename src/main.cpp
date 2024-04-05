@@ -249,6 +249,7 @@ int main()
         glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
         glDrawArrays(GL_LINES, 0, 2);
 
+        /*
         std::vector<float> sphereverts;
         float R = 2.f;
         float step = 0.05;
@@ -265,6 +266,7 @@ int main()
         glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphereverts.size(), sphereverts.data(), GL_STATIC_DRAW);
         glPointSize(10.f);
         glDrawArrays(GL_POINTS, 0, sphereverts.size()/3);
+        */
 
 
         glBindVertexArray(0);
