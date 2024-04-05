@@ -11,6 +11,9 @@ class UI {
 
     public:
         bool wire = false;
+        int perspective = 0;
+        float viewDistance = 5.f;
+        int viewDirection = 0; 
         void setWindow(GLFWwindow* w);
         void initImGui();
         bool beginMainWindow();

@@ -117,6 +117,36 @@ bool UI::showConfig()
     bool change = false;
     ImGui::Begin("Config");
     change |= ImGui::Checkbox("Toggle Wireframe", &wire);
+    change |= ImGui::RadioButton("Perspective", &perspective, 0); ImGui::SameLine();
+    change |= ImGui::RadioButton("Orthographic", &perspective, 1);
+    change |= ImGui::DragFloat("View Distance", &viewDistance, 0.005f);
+    // Change view direction. Button loop adapted from interactive ImGui Demo
+    for(int i =0; i<4;i++)
+    {
+        if(i>0)
+            ImGui::SameLine();
+        ImGui::PushID(i);
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(i / 7.0f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(i / 7.0f, 0.8f, 0.8f));
+        switch(i) 
+        {
+            case(0):
+                if(ImGui::Button("X")) viewDirection = i;
+                break;
+            case(1):
+                if(ImGui::Button("Y")) viewDirection = i;
+                break;
+            case(2):
+                if(ImGui::Button("Z")) viewDirection = i;
+                break;
+            case(3):
+                if(ImGui::Button("Ortho")) viewDirection = i;
+                break;
+        }
+        ImGui::PopStyleColor(3);
+        ImGui::PopID();
+    }
     ImGui::End();
     return change;
 }
