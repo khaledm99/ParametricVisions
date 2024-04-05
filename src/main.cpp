@@ -222,17 +222,17 @@ int main()
 
         glBindVertexArray(lVAO);
         float lineverts[] = {
-            0.f, -10.f, 0.f,
-            0.f, 10.f ,0.f
+            0.f, -100.f, 0.f,
+            0.f, 100.f ,0.f
         };
         color = glm::vec3(0.f,1.f,0.f);
         modelLoc = glGetUniformLocation(s.id,"col");
         glUniform3f(modelLoc, color.x,color.y,color.z);
         glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
         glDrawArrays(GL_LINES, 0, 2);
-        lineverts[0] = -10.f;
+        lineverts[0] = -100.f;
         lineverts[1] = 0.f;
-        lineverts[3] = 10.f;
+        lineverts[3] = 100.f;
         lineverts[4] = 0.f;
         color = glm::vec3(1.f,0.f,0.f);
         modelLoc = glGetUniformLocation(s.id,"col");
@@ -240,14 +240,31 @@ int main()
         glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
         glDrawArrays(GL_LINES, 0, 2);
         lineverts[0] = 0.f;
-        lineverts[2] = -10.f;
+        lineverts[2] = -100.f;
         lineverts[3] = 0.f;
-        lineverts[5] = 10.f;
+        lineverts[5] = 100.f;
         color = glm::vec3(0.f,0.f,1.f);
         modelLoc = glGetUniformLocation(s.id,"col");
         glUniform3f(modelLoc, color.x,color.y,color.z);
         glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
         glDrawArrays(GL_LINES, 0, 2);
+
+        std::vector<float> sphereverts;
+        float R = 2.f;
+        float step = 0.05;
+        for(float u=0.f; u<3.14f; u+=step)
+        {
+            for(float v=0.f; v<3.14f*2.f; v+=step)
+            {
+                sphereverts.push_back(R*glm::sin(u)*glm::cos(v));
+                sphereverts.push_back(R*glm::sin(v)*glm::sin(u));
+                sphereverts.push_back(R*glm::cos(u));
+            }
+            
+        }
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphereverts.size(), sphereverts.data(), GL_STATIC_DRAW);
+        glPointSize(10.f);
+        glDrawArrays(GL_POINTS, 0, sphereverts.size()/3);
 
 
         glBindVertexArray(0);

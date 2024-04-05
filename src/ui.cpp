@@ -119,7 +119,7 @@ bool UI::showConfig()
     change |= ImGui::Checkbox("Toggle Wireframe", &wire);
     change |= ImGui::RadioButton("Perspective", &perspective, 0); ImGui::SameLine();
     change |= ImGui::RadioButton("Orthographic", &perspective, 1);
-    change |= ImGui::DragFloat("View Distance", &viewDistance, 0.005f);
+    change |= ImGui::DragFloat("View Distance", &viewDistance, 0.1f);
     // Change view direction. Button loop adapted from interactive ImGui Demo
     for(int i =0; i<4;i++)
     {
