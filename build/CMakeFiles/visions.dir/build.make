@@ -167,10 +167,24 @@ CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.s: cmake_f
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/khaled/school/ParametricVisions/include/imgui-docking-1.90.5/imgui_widgets.cpp -o CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.s
 
+CMakeFiles/visions.dir/src/framebuffer.cpp.o: CMakeFiles/visions.dir/flags.make
+CMakeFiles/visions.dir/src/framebuffer.cpp.o: ../src/framebuffer.cpp
+CMakeFiles/visions.dir/src/framebuffer.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/visions.dir/src/framebuffer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/src/framebuffer.cpp.o -MF CMakeFiles/visions.dir/src/framebuffer.cpp.o.d -o CMakeFiles/visions.dir/src/framebuffer.cpp.o -c /home/khaled/school/ParametricVisions/src/framebuffer.cpp
+
+CMakeFiles/visions.dir/src/framebuffer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/visions.dir/src/framebuffer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/khaled/school/ParametricVisions/src/framebuffer.cpp > CMakeFiles/visions.dir/src/framebuffer.cpp.i
+
+CMakeFiles/visions.dir/src/framebuffer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/visions.dir/src/framebuffer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/khaled/school/ParametricVisions/src/framebuffer.cpp -o CMakeFiles/visions.dir/src/framebuffer.cpp.s
+
 CMakeFiles/visions.dir/src/main.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/visions.dir/src/main.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/visions.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/visions.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/src/main.cpp.o -MF CMakeFiles/visions.dir/src/main.cpp.o.d -o CMakeFiles/visions.dir/src/main.cpp.o -c /home/khaled/school/ParametricVisions/src/main.cpp
 
 CMakeFiles/visions.dir/src/main.cpp.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/visions.dir/src/main.cpp.s: cmake_force
 CMakeFiles/visions.dir/src/object.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/src/object.cpp.o: ../src/object.cpp
 CMakeFiles/visions.dir/src/object.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/visions.dir/src/object.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/visions.dir/src/object.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/src/object.cpp.o -MF CMakeFiles/visions.dir/src/object.cpp.o.d -o CMakeFiles/visions.dir/src/object.cpp.o -c /home/khaled/school/ParametricVisions/src/object.cpp
 
 CMakeFiles/visions.dir/src/object.cpp.i: cmake_force
@@ -198,7 +212,7 @@ CMakeFiles/visions.dir/src/object.cpp.s: cmake_force
 CMakeFiles/visions.dir/src/shader.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/src/shader.cpp.o: ../src/shader.cpp
 CMakeFiles/visions.dir/src/shader.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/visions.dir/src/shader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/visions.dir/src/shader.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/src/shader.cpp.o -MF CMakeFiles/visions.dir/src/shader.cpp.o.d -o CMakeFiles/visions.dir/src/shader.cpp.o -c /home/khaled/school/ParametricVisions/src/shader.cpp
 
 CMakeFiles/visions.dir/src/shader.cpp.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/visions.dir/src/shader.cpp.s: cmake_force
 CMakeFiles/visions.dir/src/ui.cpp.o: CMakeFiles/visions.dir/flags.make
 CMakeFiles/visions.dir/src/ui.cpp.o: ../src/ui.cpp
 CMakeFiles/visions.dir/src/ui.cpp.o: CMakeFiles/visions.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/visions.dir/src/ui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/visions.dir/src/ui.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/visions.dir/src/ui.cpp.o -MF CMakeFiles/visions.dir/src/ui.cpp.o.d -o CMakeFiles/visions.dir/src/ui.cpp.o -c /home/khaled/school/ParametricVisions/src/ui.cpp
 
 CMakeFiles/visions.dir/src/ui.cpp.i: cmake_force
@@ -232,6 +246,7 @@ visions_OBJECTS = \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o" \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o" \
 "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o" \
+"CMakeFiles/visions.dir/src/framebuffer.cpp.o" \
 "CMakeFiles/visions.dir/src/main.cpp.o" \
 "CMakeFiles/visions.dir/src/object.cpp.o" \
 "CMakeFiles/visions.dir/src/shader.cpp.o" \
@@ -247,6 +262,7 @@ visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_glfw.cpp
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_impl_opengl3.cpp.o
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o
 visions: CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o
+visions: CMakeFiles/visions.dir/src/framebuffer.cpp.o
 visions: CMakeFiles/visions.dir/src/main.cpp.o
 visions: CMakeFiles/visions.dir/src/object.cpp.o
 visions: CMakeFiles/visions.dir/src/shader.cpp.o
@@ -258,7 +274,7 @@ visions: /usr/lib/x86_64-linux-gnu/librt.a
 visions: /usr/lib/x86_64-linux-gnu/libm.so
 visions: /usr/lib/x86_64-linux-gnu/libX11.so
 visions: CMakeFiles/visions.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable visions"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/khaled/school/ParametricVisions/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable visions"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/visions.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -381,6 +381,30 @@ include/imgui-docking-1.90.5/imgui_widgets.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.s
 .PHONY : include/imgui-docking-1.90.5/imgui_widgets.cpp.s
 
+src/framebuffer.o: src/framebuffer.cpp.o
+.PHONY : src/framebuffer.o
+
+# target to build an object file
+src/framebuffer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/src/framebuffer.cpp.o
+.PHONY : src/framebuffer.cpp.o
+
+src/framebuffer.i: src/framebuffer.cpp.i
+.PHONY : src/framebuffer.i
+
+# target to preprocess a source file
+src/framebuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/src/framebuffer.cpp.i
+.PHONY : src/framebuffer.cpp.i
+
+src/framebuffer.s: src/framebuffer.cpp.s
+.PHONY : src/framebuffer.s
+
+# target to generate assembly for a file
+src/framebuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/visions.dir/build.make CMakeFiles/visions.dir/src/framebuffer.cpp.s
+.PHONY : src/framebuffer.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -514,6 +538,9 @@ help:
 	@echo "... include/imgui-docking-1.90.5/imgui_widgets.o"
 	@echo "... include/imgui-docking-1.90.5/imgui_widgets.i"
 	@echo "... include/imgui-docking-1.90.5/imgui_widgets.s"
+	@echo "... src/framebuffer.o"
+	@echo "... src/framebuffer.i"
+	@echo "... src/framebuffer.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

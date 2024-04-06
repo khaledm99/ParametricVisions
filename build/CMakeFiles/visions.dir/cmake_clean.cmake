@@ -13,6 +13,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_tables.cpp.o.d"
   "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o"
   "CMakeFiles/visions.dir/include/imgui-docking-1.90.5/imgui_widgets.cpp.o.d"
+  "CMakeFiles/visions.dir/src/framebuffer.cpp.o"
+  "CMakeFiles/visions.dir/src/framebuffer.cpp.o.d"
   "CMakeFiles/visions.dir/src/main.cpp.o"
   "CMakeFiles/visions.dir/src/main.cpp.o.d"
   "CMakeFiles/visions.dir/src/object.cpp.o"
