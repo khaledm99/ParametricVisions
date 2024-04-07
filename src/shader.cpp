@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const char* vertPath, const char* fragPath)
 {
@@ -93,3 +94,11 @@ void Shader::setFloat(const std::string &name, float value) const
 { 
     glUniform1f(glGetUniformLocation(id, name.c_str()), value); 
 } 
+void Shader::setVec3(const std::string &name, glm::vec3 val) const
+{
+    glUniform3f(glGetUniformLocation(id, name.c_str()), val.x,val.y,val.z); 
+}
+void Shader::setMat4(const std::string &name, glm::mat4 val) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1,GL_FALSE, glm::value_ptr(val)); 
+}

@@ -1,9 +1,9 @@
 
-if (NOT EXISTS "/home/khaled/school/ParametricVisions/build/include/glfw-3.3.2/install_manifest.txt")
-  message(FATAL_ERROR "Cannot find install manifest: \"/home/khaled/school/ParametricVisions/build/include/glfw-3.3.2/install_manifest.txt\"")
+if (NOT EXISTS "/home/khaled/School/ParametricVisions/build/include/glfw-3.3.2/install_manifest.txt")
+  message(FATAL_ERROR "Cannot find install manifest: \"/home/khaled/School/ParametricVisions/build/include/glfw-3.3.2/install_manifest.txt\"")
 endif()
 
-file(READ "/home/khaled/school/ParametricVisions/build/include/glfw-3.3.2/install_manifest.txt" files)
+file(READ "/home/khaled/School/ParametricVisions/build/include/glfw-3.3.2/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 
 foreach (file ${files})

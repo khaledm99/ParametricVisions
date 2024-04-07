@@ -1,5 +1,6 @@
 #pragma once
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <string>
 #include <fstream>
@@ -19,6 +20,8 @@ class Shader
         void setBool(const std::string &name, bool val) const;
         void setInt(const std::string &name, int val) const;
         void setFloat(const std::string &name, float val) const;
+        void setVec3(const std::string &name, glm::vec3 val) const;
+        void setMat4(const std::string &name, glm::mat4 val) const;
 };
 
 
