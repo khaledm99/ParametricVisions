@@ -7,9 +7,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "object.h"
+#include "Bspline.h"
+#include "RevolutionSurface.h"
+#include "FreeformSurface.h"
 
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 
 
@@ -143,7 +147,39 @@ int main()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
+
     
+    std::vector<glm::vec3> controlPoints = { glm::vec3(-0.5f,-0.7f, 0.3f), glm::vec3(-0.2f,-0.4f, 0.3f), glm::vec3(-0.1f,0.4f, 0.3f), glm::vec3(-0.5f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints2 = { glm::vec3(-0.7f,-0.7f, 0.3f), glm::vec3(-0.4f,-0.4f, 0.3f), glm::vec3(-0.3f,0.4f, 0.3f), glm::vec3(-0.7f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints3 = { glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.0f,-0.4f, 0.3f), glm::vec3(0.1f,0.4f, 0.3f), glm::vec3(-0.3f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 0.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
+
+
+    std::vector<std::vector<glm::vec3>> freeformPoints;
+    freeformPoints.push_back(controlPoints);
+    freeformPoints.push_back(controlPoints2);
+    freeformPoints.push_back(controlPoints3);
+    freeformPoints.push_back(controlPoints4);
+
+
+    FreeformSurface ffSurface(freeformPoints, 3, 3);
+    ffSurface.build();
+
+    Bspline bspline(controlPoints, 3);
+    bspline.build();
+    std::cout << bspline.getGeom().verts.size() << std::endl;
+
+    Bspline bspline2(controlPoints2, 3);
+    bspline2.build();
+
+    Bspline bspline3(controlPoints3, 3);
+    bspline3.build();
+
+    Bspline bspline4(controlPoints4, 3);
+    bspline4.build();
+
+    RevolutionSurface rs(bspline);
+    rs.build();
 
     /*
     unsigned int vertexShader;
@@ -220,10 +256,16 @@ int main()
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         //o.draw();
-        glBindVertexArray(VAO);
+        //glBindVertexArray(VAO);
         //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(0);
+        bspline.draw();
+        bspline2.draw();
+        bspline3.draw();
+        bspline4.draw();
+        //rs.draw();
+        ffSurface.draw();
         
         //ui.render();
         glfwSwapBuffers(window);

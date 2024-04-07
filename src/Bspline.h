@@ -10,6 +10,14 @@ public:
 
 	Bspline(std::vector<glm::vec3> controlPoints, int k);
 
+	Bspline(const Bspline& other)
+		:controlPoints(other.controlPoints),
+		bsplineGeom(other.bsplineGeom),
+		k(other.k)
+	{
+
+	}
+
 	//creates the geometry of the bspline and stores it into bsplineGeom
 	int build();
 
