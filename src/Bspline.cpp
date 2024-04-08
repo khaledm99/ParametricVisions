@@ -31,7 +31,7 @@ int Bspline::build() {
 // bpsline needs to be built before drawn
 void Bspline::draw() {
 	gpuGeom.bind();
-	glDrawArrays(GL_POINTS, 0, GLsizei(bsplineGeom.verts.size()));
+	glDrawArrays(GL_LINE_STRIP, 0, GLsizei(bsplineGeom.verts.size()));
 
 }
 

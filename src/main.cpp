@@ -140,7 +140,7 @@ float vertices[] = {
 
     glEnable(GL_DEPTH_TEST);
 
-    std::vector<glm::vec3> controlPoints = { glm::vec3(-0.9f,-0.7f, 0.3f), glm::vec3(-0.6f,-0.4f, 0.3f), glm::vec3(-0.5f,0.4f, 0.3f), glm::vec3(-1.0f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints = { glm::vec3(-0.9f,-0.7f, -0.3f), glm::vec3(-0.6f,-0.4f,- 0.3f), glm::vec3(-0.5f,0.4f, -0.3f), glm::vec3(-1.0f,0.7f, -0.3f) };
     std::vector<glm::vec3> controlPoints2 = { glm::vec3(-0.7f,-0.7f, 0.3f), glm::vec3(-0.4f,-0.4f, 0.3f), glm::vec3(-0.3f,0.4f, 0.3f), glm::vec3(-0.7f,0.7f, 0.3f) };
     std::vector<glm::vec3> controlPoints3 = { glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.0f,-0.4f, 0.3f), glm::vec3(0.1f,0.4f, 0.3f), glm::vec3(-0.3f,0.7f, 0.3f) };
     std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 4.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
@@ -159,6 +159,9 @@ float vertices[] = {
 
     Bspline bspline(controlPoints, 3);
     bspline.build();
+
+    Bspline bspline2(controlPoints5, 3);
+    bspline2.build();
 
     RevolutionSurface rs(bspline);
     rs.build();
@@ -281,7 +284,9 @@ float vertices[] = {
         zaxis.draw();
 
         bspline.draw();
-        ffSurface.draw();
+
+        bspline2.draw();
+
 
         
 

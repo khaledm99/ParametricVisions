@@ -26,7 +26,7 @@ void FreeformSurface::build() {
 	int range_v = vKnotSequence.back();
 	float range_u = uKnotSequence.back();
 	float increment_v = 0.05 * range_v;
-	float increment_u = 0.05 * range_u;
+	float increment_u = 0.1 * range_u;
 
 	std::cout << range_u << " " << range_v << std::endl;
 	float v;
@@ -35,11 +35,19 @@ void FreeformSurface::build() {
 	for (v = 0.f; v <= range_v; v += increment_v) {
 		height++;
 	}
+
+	bool doOnce = true;
 	
-	for (float u = 0.f; u <= range_u; u += increment_u) {
-		for (v = 0; v <= range_v; v += increment_v) {
+	for (float u = 0.f; u < range_u; u += increment_u) {
+		for (v = 0; v < range_v; v += increment_v) {
+			//std::cout << "u: " << u << " v: " << v << std::endl;
 			surfaceGeom.verts.push_back(E_delta_2(u, v));
 			surfaceGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
+			
+		}
+		if (u + increment_u > range_u && doOnce == true){
+			u = range_u - 0.01 - increment_u;
+			doOnce = false;
 		}
 	}
 
@@ -80,6 +88,10 @@ void FreeformSurface::build() {
 	for (auto& norms : surfaceGeom.normals) {
 		norms = glm::normalize(norms);
 	}
+
+	//for (auto& norms : surfaceGeom.normals) {
+	//	std::cout << norms.x << " " << norms.y << " " << norms.z << std::endl;
+	//} 
 
 	//std::cout << u << std::endl;
 	
