@@ -1,5 +1,9 @@
 #include "ui.h"
 #include "shader.h"
+#include "framebuffer.h"
+#include "Line.h"
+#include "Triangle.h"
+#include "Camera.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -7,28 +11,24 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "object.h"
-#include "Bspline.h"
-#include "RevolutionSurface.h"
-#include "FreeformSurface.h"
 
 #include <stdio.h>
 #include <iostream>
-#include <vector>
 
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0,0,width,height);
+    glViewport(0, 0, width, height);
 }
 bool wire = false;
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
-        glfwSetWindowShouldClose(window,true);
+        glfwSetWindowShouldClose(window, true);
     }
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         wire = !wire;
 
@@ -43,95 +43,79 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800,600, "ParametricVisions", NULL, NULL);
-    if(window == NULL)
+    const int WWIDTH = 1920;
+    const int WHEIGHT = 1080;
+    const int VPWIDTH = 800;
+    const int VPHEIGHT = 600;
+
+    GLFWwindow* window = glfwCreateWindow(WWIDTH, WHEIGHT, "ParametricVisions", NULL, NULL);
+    if (window == NULL)
     {
-        std::cout<< "Failed to create GLFW window" << std::endl;
+        std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
 
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cout<< "Failed to initialize GLAD" << std::endl;
+        std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    glViewport(0,0,800,600);
+    glViewport(0, 0, VPWIDTH, VPHEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    
+
     UI ui;
     ui.setWindow(window);
     ui.initImGui();
-
-    /*
     float vertices[] = {
-         0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 0.0f   // top left 
+        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f
     };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };  
-    */
 
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-    /*
-    std::vector<float> v(std::begin(vertices), std::end(vertices));
-    Object o;
-    o.setVertices(v);
-    */
-
-    //unsigned int EBO;
-    //glGenBuffers(1,&EBO);
-    
 
     unsigned int VBO;
-    glGenBuffers(1,&VBO);
+    glGenBuffers(1, &VBO);
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
 
@@ -143,140 +127,149 @@ int main()
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // 4. then set the vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
-    
-    std::vector<glm::vec3> controlPoints = { glm::vec3(-0.5f,-0.7f, 0.3f), glm::vec3(-0.2f,-0.4f, 0.3f), glm::vec3(-0.1f,0.4f, 0.3f), glm::vec3(-0.5f,0.7f, 0.3f) };
-    std::vector<glm::vec3> controlPoints2 = { glm::vec3(-0.7f,-0.7f, 0.3f), glm::vec3(-0.4f,-0.4f, 0.3f), glm::vec3(-0.3f,0.4f, 0.3f), glm::vec3(-0.7f,0.7f, 0.3f) };
-    std::vector<glm::vec3> controlPoints3 = { glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.0f,-0.4f, 0.3f), glm::vec3(0.1f,0.4f, 0.3f), glm::vec3(-0.3f,0.7f, 0.3f) };
-    std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 0.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
-    std::vector<glm::vec3> controlPoints5 = { glm::vec3(0.1,-1.7f, 0.7f), glm::vec3(0.4f,-1.7f, 0.7f), glm::vec3(0.5f,0.4f, 0.7f), glm::vec3(1.1f,0.7f, 0.7f) };
-
-
-
-    std::vector<std::vector<glm::vec3>> freeformPoints;
-    freeformPoints.push_back(controlPoints);
-    freeformPoints.push_back(controlPoints2);
-    freeformPoints.push_back(controlPoints3);
-    freeformPoints.push_back(controlPoints4);
-    freeformPoints.push_back(controlPoints5);
-
-
-    FreeformSurface ffSurface(freeformPoints, 3, 3);
-    ffSurface.build();
-
-    Bspline bspline(controlPoints, 3);
-    bspline.build();
-    std::cout << bspline.getGeom().verts.size() << std::endl;
-
-    Bspline bspline2(controlPoints2, 3);
-    bspline2.build();
-
-    Bspline bspline3(controlPoints3, 3);
-    bspline3.build();
-
-    Bspline bspline4(controlPoints4, 3);
-    bspline4.build();
-
-    std::vector<glm::vec3> controlPointsT = { glm::vec3(-0.5f,-0.7f, 0.3f), glm::vec3(-0.7f,-0.7f, 0.3f),  glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.1,-0.7f, 0.3f) };
-    Bspline test(controlPointsT, 3);
-    test.build();
-
-
-    RevolutionSurface rs(bspline);
-    rs.build();
-
-    /*
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    int ss;
-    char infolog[515];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &ss);
-    if(!ss)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infolog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infolog << std::endl;
-    }
-
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    */
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glBindVertexArray(0);
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
+    Shader s("./shaders/shader.vs", "./shaders/shader.fs");
+    Shader axis("./shaders/axis.vs", "./shaders/axis.fs");
 
+    Framebuffer fb;
+    fb.setup(VPWIDTH, VPHEIGHT);
 
-    while(!glfwWindowShouldClose(window))
+    auto vs = ui.getViewportSize();
+    vs.x = VPWIDTH;
+    vs.y = VPHEIGHT;
+    while (!glfwWindowShouldClose(window))
     {
+
         glfwPollEvents();
         processInput(window);
 
         // Set wireframe mode
-        if(wire)
-        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+        fb.bind();
+        if (ui.wire)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         else
-        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-        glClearColor(0.2f,0.3f,0.3f,1.0f);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
+        // Render
+        s.use();
+
+        Camera cam;
+
+
+        switch (ui.viewDirection)
+        {
+        case(0):
+            cam.update(glm::vec3(-10.f, 0.f, 0.f), 0.f, 0.f, -10.f);
+            break;
+        case(1):
+            cam.update(glm::vec3(0.f, 0.f, -10.f), 90.f, 0.f, -10.f);
+            break;
+        case(2):
+            cam.update(glm::vec3(0.f, 10.f, 0.f), 0.f, -90.f, -10.f);
+            break;
+        case(3):
+            cam.update(glm::vec3(-5.f, 5.f, 5.f), -45.f, -35.f, -10.f);
+        case(4):
+            break;
+
+        }
+
+        glm::mat4 view = cam.lookAt();
+        glm::mat4 model = glm::mat4(1.f);
+
+        s.setVec3("viewPos", cam.pos);
+
+        glm::mat4 projection;
+        float aspect = vs.x / vs.y;
+        if (ui.perspective == 0)
+            projection = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
+        else projection = glm::ortho(-aspect, aspect, -1.f, 1.f, 0.1f, 100.0f);
+
+        // Send matrices to shader
+        s.setMat4("model", model);
+        s.setMat4("projection", projection);
+        s.setMat4("view", view);
+        // draw cube
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        /*
+        std::vector<float> sphereverts;
+        float R = 2.f;
+        float step = 0.01;
+        for(float u=0.f; u<3.14f; u+=step)
+        {
+            for(float v=0.f; v<3.14f*2.f; v+=step)
+            {
+                sphereverts.push_back(R*glm::sin(u)*glm::cos(v));
+                sphereverts.push_back(R*glm::sin(v)*glm::sin(u));
+                sphereverts.push_back(R*glm::cos(u));
+                sphereverts.push_back(0.f);
+                sphereverts.push_back(0.f);
+                sphereverts.push_back(1.f);
+                sphereverts.push_back(-glm::sin(v)*glm::cos(u));
+                sphereverts.push_back(-glm::sin(v)*glm::sin(u));
+                sphereverts.push_back(-glm::cos(v));
+            }
+
+        }
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphereverts.size(), sphereverts.data(), GL_STATIC_DRAW);
+        glPointSize(10.f);
+        glDrawArrays(GL_POINTS, 0, sphereverts.size()/3);
+        */
+
+        glBindVertexArray(0);
+
+        // Draw axes
+        axis.use();
+        s.setMat4("model", model);
+        s.setMat4("projection", projection);
+        s.setMat4("view", view);
+
+
+        glm::vec3 RED(1.f, 0.f, 0.f);
+        glm::vec3 GREEN(0.f, 1.f, 0.f);
+        glm::vec3 YELLOW(1.f, 1.f, 0.f);
+        Line xaxis(glm::vec3(100.f, 0.f, 0.f), glm::vec3(-100.f, 0.f, 0.f), RED);
+        xaxis.draw();
+        Line yaxis(glm::vec3(0.f, 100.f, 0.f), glm::vec3(0.f, -100.f, 0.f), YELLOW);
+        yaxis.draw();
+        Line zaxis(glm::vec3(0.f, 0.f, 100.f), glm::vec3(0.f, 0.f, -100.f), GREEN);
+        zaxis.draw();
+
+
+
+
+        glBindVertexArray(0);
+        fb.unbind();
+
 
         // UI 
-        /*
         bool change = false;
 
         change |= ui.beginMainWindow();
         change |= ui.showConfig();
+        change |= ui.showViewport(fb.getTextureBuffer());
         ui.endMainWindowAndRender();
-        */
 
-        // Render
-        //glUseProgram(shaderProgram);
-        s.use();
-        glm::mat4 model = glm::mat4(1.f);
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f,1.f,0.f));
-        glm::mat4 view = glm::mat4(1.f);
-        view = glm::translate(view, glm::vec3(0.f,0.f,-3.f));
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.f),800.f/600.f,0.1f,100.f);
-        
-        int modelLoc = glGetUniformLocation(s.id,"model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        modelLoc = glGetUniformLocation(s.id,"view");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(view));
-        modelLoc = glGetUniformLocation(s.id,"projection");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        ui.render();
 
-        //o.draw();
-        //glBindVertexArray(VAO);
-        //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
-        //glBindVertexArray(0);
-        bspline.draw();
-        bspline2.draw();
-        bspline3.draw();
-        bspline4.draw();
-        test.draw();
-        //rs.draw();
-        ffSurface.draw();
-        
-        //ui.render();
+        // Resize viewport framebuffer if ui panel is resized
+        if (vs.x != ui.getViewportSize().x || vs.y != ui.getViewportSize().y)
+        {
+            vs = ui.getViewportSize();
+            fb.setup(vs.x, vs.y);
+        }
         glfwSwapBuffers(window);
     }
 
