@@ -83,7 +83,8 @@ void RevolutionSurface::build() {
 void RevolutionSurface::draw() {
 	GPU_Geometry_Index gpuGeom;
 	gpuGeom.setVerts(surfaceGeom.verts);
-	gpuGeom.setCols(surfaceGeom.normals);
+	gpuGeom.setCols(surfaceGeom.cols);
+	gpuGeom.setNormals(surfaceGeom.normals);
 	gpuGeom.setIndices(surfaceGeom.indices);
 
 	gpuGeom.bind();

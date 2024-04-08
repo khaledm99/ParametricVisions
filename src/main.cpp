@@ -11,6 +11,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "object.h"
+#include "RevolutionSurface.h"
+#include "Bspline.h"
+#include "FreeformSurface.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -137,6 +140,32 @@ float vertices[] = {
 
     glEnable(GL_DEPTH_TEST);
 
+    std::vector<glm::vec3> controlPoints = { glm::vec3(-0.9f,-0.7f, 0.3f), glm::vec3(-0.6f,-0.4f, 0.3f), glm::vec3(-0.5f,0.4f, 0.3f), glm::vec3(-1.0f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints2 = { glm::vec3(-0.7f,-0.7f, 0.3f), glm::vec3(-0.4f,-0.4f, 0.3f), glm::vec3(-0.3f,0.4f, 0.3f), glm::vec3(-0.7f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints3 = { glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.0f,-0.4f, 0.3f), glm::vec3(0.1f,0.4f, 0.3f), glm::vec3(-0.3f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 4.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints5 = { glm::vec3(0.4,-1.7f, 0.7f), glm::vec3(0.6f,-1.7f, 0.7f), glm::vec3(0.5f,0.4f, 0.7f), glm::vec3(1.1f,0.7f, 0.7f) };
+
+    std::vector<std::vector<glm::vec3>> freeformPoints;
+    freeformPoints.push_back(controlPoints);
+    freeformPoints.push_back(controlPoints2);
+    freeformPoints.push_back(controlPoints3);
+    freeformPoints.push_back(controlPoints4);
+    freeformPoints.push_back(controlPoints5);
+
+
+    FreeformSurface ffSurface(freeformPoints, 3, 3);
+    ffSurface.build();
+
+    Bspline bspline(controlPoints, 3);
+    bspline.build();
+
+    RevolutionSurface rs(bspline);
+    rs.build();
+
+
+
+
     Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
     Shader axis("./shaders/axis.vs", "./shaders/axis.fs"); 
    
@@ -201,8 +230,12 @@ float vertices[] = {
         s.setMat4("projection", projection);
         s.setMat4("view", view);
         // draw cube
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(VAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //rs.draw();
+        ffSurface.draw();
+
+
         /*
         std::vector<float> sphereverts;
         float R = 2.f;
@@ -247,7 +280,9 @@ float vertices[] = {
         Line zaxis(glm::vec3(0.f,0.f,100.f),glm::vec3(0.f,0.f,-100.f),GREEN);
         zaxis.draw();
 
-        
+        bspline.draw();
+        ffSurface.draw();
+
         
 
         glBindVertexArray(0);

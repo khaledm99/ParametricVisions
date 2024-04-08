@@ -25,19 +25,19 @@ void FreeformSurface::build() {
 
 	int range_v = vKnotSequence.back();
 	float range_u = uKnotSequence.back();
-	float increment_v = 0.01 * range_v;
-	float increment_u = 0.01 * range_u;
+	float increment_v = 0.05 * range_v;
+	float increment_u = 0.05 * range_u;
 
 	std::cout << range_u << " " << range_v << std::endl;
-	float u;
+	float v;
 
 	int height = 0;
-	for (u = 0.f; u <= range_u; u += increment_u) {
+	for (v = 0.f; v <= range_v; v += increment_v) {
 		height++;
 	}
 	
-	for (u = 0.f; u <= range_u; u += increment_u) {
-		for (float v = 0; v <= range_v; v += increment_v) {
+	for (float u = 0.f; u <= range_u; u += increment_u) {
+		for (v = 0; v <= range_v; v += increment_v) {
 			surfaceGeom.verts.push_back(E_delta_2(u, v));
 			surfaceGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
 		}
@@ -81,14 +81,15 @@ void FreeformSurface::build() {
 		norms = glm::normalize(norms);
 	}
 
-	std::cout << u << std::endl;
+	//std::cout << u << std::endl;
 	
 }
 
 void FreeformSurface::draw() {
 	GPU_Geometry_Index gpuGeom;
 	gpuGeom.setVerts(surfaceGeom.verts);
-	gpuGeom.setCols(surfaceGeom.normals);
+	gpuGeom.setCols(surfaceGeom.cols);
+	gpuGeom.setNormals(surfaceGeom.normals);
 	gpuGeom.setIndices(surfaceGeom.indices);
 
 	gpuGeom.bind();

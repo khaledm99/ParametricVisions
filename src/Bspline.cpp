@@ -17,7 +17,7 @@ int Bspline::build() {
 	bsplineGeom.cols.clear();
 
 	int range = knotSequence.back();
-	float increment = 0.01 * range;
+	float increment = 0.05 * range;
 	for (float u = 0; u < knotSequence.back(); u += increment) {
 		bsplineGeom.verts.push_back(E_delta_1(u, k, controlPoints.size()-1, knotSequence, controlPoints));
 		bsplineGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
@@ -31,7 +31,7 @@ int Bspline::build() {
 // bpsline needs to be built before drawn
 void Bspline::draw() {
 	gpuGeom.bind();
-	glDrawArrays(GL_LINE_STRIP, 0, GLsizei(bsplineGeom.verts.size()));
+	glDrawArrays(GL_POINTS, 0, GLsizei(bsplineGeom.verts.size()));
 
 }
 
