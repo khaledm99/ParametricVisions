@@ -48,8 +48,8 @@ int main()
     const int VPWIDTH = 800;
     const int VPHEIGHT = 600;
 
-    GLFWwindow* window = glfwCreateWindow(WWIDTH, WHEIGHT, "ParametricVisions", NULL, NULL);
-    if (window == NULL)
+    GLFWwindow* window = glfwCreateWindow(WWIDTH,WHEIGHT, "ParametricVisions", NULL, NULL);
+    if(window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -62,58 +62,58 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    glViewport(0, 0, VPWIDTH, VPHEIGHT);
+    glViewport(0,0,VPWIDTH,VPHEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     UI ui;
     ui.setWindow(window);
     ui.initImGui();
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+    -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
 
-        -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f
-    };
+    -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f
+};
+      
 
-
-
+    
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     unsigned int VAO;
@@ -129,33 +129,33 @@ int main()
     // 4. then set the vertex attributes pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6*sizeof(float)));
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader s("./shaders/shader.vs", "./shaders/shader.fs");
-    Shader axis("./shaders/axis.vs", "./shaders/axis.fs");
-
+    Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
+    Shader axis("./shaders/axis.vs", "./shaders/axis.fs"); 
+   
     Framebuffer fb;
     fb.setup(VPWIDTH, VPHEIGHT);
 
     auto vs = ui.getViewportSize();
     vs.x = VPWIDTH;
     vs.y = VPHEIGHT;
-    while (!glfwWindowShouldClose(window))
+    while(!glfwWindowShouldClose(window))
     {
-
+        
         glfwPollEvents();
         processInput(window);
 
         // Set wireframe mode
         fb.bind();
-        if (ui.wire)
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if(ui.wire)
+        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         else
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -165,37 +165,37 @@ int main()
         s.use();
 
         Camera cam;
-
-
-        switch (ui.viewDirection)
+        
+       
+        switch(ui.viewDirection)
         {
-        case(0):
-            cam.update(glm::vec3(-10.f, 0.f, 0.f), 0.f, 0.f, -10.f);
-            break;
-        case(1):
-            cam.update(glm::vec3(0.f, 0.f, -10.f), 90.f, 0.f, -10.f);
-            break;
-        case(2):
-            cam.update(glm::vec3(0.f, 10.f, 0.f), 0.f, -90.f, -10.f);
-            break;
-        case(3):
-            cam.update(glm::vec3(-5.f, 5.f, 5.f), -45.f, -35.f, -10.f);
-        case(4):
-            break;
+            case(0):
+                cam.update(glm::vec3(-10.f,0.f,0.f), 0.f,0.f, -10.f);
+                break;
+            case(1):
+                cam.update(glm::vec3(0.f,0.f,-10.f), 90.f,0.f, -10.f);
+                break;
+            case(2):
+                cam.update(glm::vec3(0.f,10.f,0.f), 0.f,-90.f, -10.f);
+                break;
+            case(3):
+                cam.update(glm::vec3(-5.f,5.f,5.f), -45.f,-35.f, -10.f);
+            case(4):
+                break;
 
         }
 
         glm::mat4 view = cam.lookAt();
         glm::mat4 model = glm::mat4(1.f);
 
-        s.setVec3("viewPos", cam.pos);
+        s.setVec3("viewPos",cam.pos);
 
         glm::mat4 projection;
-        float aspect = vs.x / vs.y;
-        if (ui.perspective == 0)
-            projection = glm::perspective(glm::radians(45.f), aspect, 0.1f, 100.f);
+        float aspect = vs.x/vs.y;
+        if(ui.perspective == 0)
+            projection = glm::perspective(glm::radians(45.f),aspect,0.1f,100.f);
         else projection = glm::ortho(-aspect, aspect, -1.f, 1.f, 0.1f, 100.0f);
-
+        
         // Send matrices to shader
         s.setMat4("model", model);
         s.setMat4("projection", projection);
@@ -221,13 +221,13 @@ int main()
                 sphereverts.push_back(-glm::sin(v)*glm::sin(u));
                 sphereverts.push_back(-glm::cos(v));
             }
-
+            
         }
         glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphereverts.size(), sphereverts.data(), GL_STATIC_DRAW);
         glPointSize(10.f);
         glDrawArrays(GL_POINTS, 0, sphereverts.size()/3);
         */
-
+        
         glBindVertexArray(0);
 
         // Draw axes
@@ -237,18 +237,18 @@ int main()
         s.setMat4("view", view);
 
 
-        glm::vec3 RED(1.f, 0.f, 0.f);
-        glm::vec3 GREEN(0.f, 1.f, 0.f);
-        glm::vec3 YELLOW(1.f, 1.f, 0.f);
-        Line xaxis(glm::vec3(100.f, 0.f, 0.f), glm::vec3(-100.f, 0.f, 0.f), RED);
+        glm::vec3 RED(1.f,0.f,0.f);
+        glm::vec3 GREEN(0.f,1.f,0.f);
+        glm::vec3 YELLOW(1.f,1.f,0.f);
+        Line xaxis(glm::vec3(100.f,0.f,0.f),glm::vec3(-100.f,0.f,0.f),RED);
         xaxis.draw();
-        Line yaxis(glm::vec3(0.f, 100.f, 0.f), glm::vec3(0.f, -100.f, 0.f), YELLOW);
+        Line yaxis(glm::vec3(0.f,100.f,0.f),glm::vec3(0.f,-100.f,0.f),YELLOW);
         yaxis.draw();
-        Line zaxis(glm::vec3(0.f, 0.f, 100.f), glm::vec3(0.f, 0.f, -100.f), GREEN);
+        Line zaxis(glm::vec3(0.f,0.f,100.f),glm::vec3(0.f,0.f,-100.f),GREEN);
         zaxis.draw();
 
-
-
+        
+        
 
         glBindVertexArray(0);
         fb.unbind();
@@ -261,11 +261,11 @@ int main()
         change |= ui.showConfig();
         change |= ui.showViewport(fb.getTextureBuffer());
         ui.endMainWindowAndRender();
-
+        
         ui.render();
 
         // Resize viewport framebuffer if ui panel is resized
-        if (vs.x != ui.getViewportSize().x || vs.y != ui.getViewportSize().y)
+        if(vs.x != ui.getViewportSize().x || vs.y != ui.getViewportSize().y)
         {
             vs = ui.getViewportSize();
             fb.setup(vs.x, vs.y);
