@@ -20,6 +20,7 @@ void RevolutionSurface::build() {
 
 	surfaceGeom.cols.clear();
 	surfaceGeom.verts.clear();
+	surfaceGeom.normals.clear();
 	surfaceGeom.indices.clear();
 
 	for (int i = 0; i < 366; i+=2) {
@@ -49,6 +50,29 @@ void RevolutionSurface::build() {
 		}
 	}
 
+		
+	surfaceGeom.normals = std::vector<glm::vec3>(surfaceGeom.verts.size(), glm::vec3(0.0f));
+
+	for (size_t i = 0; i < surfaceGeom.indices.size(); i += 3) {
+		glm::vec3 p1 = surfaceGeom.verts[surfaceGeom.indices[i]];
+		glm::vec3 p2 = surfaceGeom.verts[surfaceGeom.indices[i + 1]];
+		glm::vec3 p3 = surfaceGeom.verts[surfaceGeom.indices[i + 2]];
+
+		glm::vec3 v1 = p2 - p1;
+		glm::vec3 v2 = p3 - p2;
+		glm::vec3 v3 = p1 - p3;
+
+		surfaceGeom.normals[surfaceGeom.indices[i]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v3, v1) / (glm::length(-v3) * glm::length(v1)));
+		surfaceGeom.normals[surfaceGeom.indices[i + 1]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v1, v2) / (glm::length(-v1) * glm::length(v2)));
+		surfaceGeom.normals[surfaceGeom.indices[i + 2]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v2, v3) / (glm::length(-v2) * glm::length(v3)));
+
+	}
+
+	for (auto& norms : surfaceGeom.normals) {
+		norms = glm::normalize(norms);
+	}
+
+
 	std::cout << surfaceGeom.verts.size() << std::endl;
 
 	//for (int i = 0; i < surfaceGeom.indices.size(); i++) {
@@ -59,7 +83,7 @@ void RevolutionSurface::build() {
 void RevolutionSurface::draw() {
 	GPU_Geometry_Index gpuGeom;
 	gpuGeom.setVerts(surfaceGeom.verts);
-	gpuGeom.setCols(surfaceGeom.cols);
+	gpuGeom.setCols(surfaceGeom.normals);
 	gpuGeom.setIndices(surfaceGeom.indices);
 
 	gpuGeom.bind();

@@ -26,6 +26,7 @@ struct CPU_Geometry_Index {
 	std::vector<glm::vec3> verts;
 	std::vector<unsigned int> indices;
 	std::vector<glm::vec3> cols;
+	std::vector<glm::vec3> normals;
 };
 
 

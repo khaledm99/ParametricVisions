@@ -153,6 +153,8 @@ int main()
     std::vector<glm::vec3> controlPoints2 = { glm::vec3(-0.7f,-0.7f, 0.3f), glm::vec3(-0.4f,-0.4f, 0.3f), glm::vec3(-0.3f,0.4f, 0.3f), glm::vec3(-0.7f,0.7f, 0.3f) };
     std::vector<glm::vec3> controlPoints3 = { glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.0f,-0.4f, 0.3f), glm::vec3(0.1f,0.4f, 0.3f), glm::vec3(-0.3f,0.7f, 0.3f) };
     std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 0.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints5 = { glm::vec3(0.1,-1.7f, 0.7f), glm::vec3(0.4f,-1.7f, 0.7f), glm::vec3(0.5f,0.4f, 0.7f), glm::vec3(1.1f,0.7f, 0.7f) };
+
 
 
     std::vector<std::vector<glm::vec3>> freeformPoints;
@@ -160,6 +162,7 @@ int main()
     freeformPoints.push_back(controlPoints2);
     freeformPoints.push_back(controlPoints3);
     freeformPoints.push_back(controlPoints4);
+    freeformPoints.push_back(controlPoints5);
 
 
     FreeformSurface ffSurface(freeformPoints, 3, 3);
@@ -177,6 +180,11 @@ int main()
 
     Bspline bspline4(controlPoints4, 3);
     bspline4.build();
+
+    std::vector<glm::vec3> controlPointsT = { glm::vec3(-0.5f,-0.7f, 0.3f), glm::vec3(-0.7f,-0.7f, 0.3f),  glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.1,-0.7f, 0.3f) };
+    Bspline test(controlPointsT, 3);
+    test.build();
+
 
     RevolutionSurface rs(bspline);
     rs.build();
@@ -264,6 +272,7 @@ int main()
         bspline2.draw();
         bspline3.draw();
         bspline4.draw();
+        test.draw();
         //rs.draw();
         ffSurface.draw();
         

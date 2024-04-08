@@ -29,24 +29,73 @@ void FreeformSurface::build() {
 	float increment_u = 0.01 * range_u;
 
 	std::cout << range_u << " " << range_v << std::endl;
+	float u;
 
-	for (float u = 0; u < range_u; u += increment_u) {
-		for (float v = 0; v < range_v; v += increment_v) {
+	int height = 0;
+	for (u = 0.f; u <= range_u; u += increment_u) {
+		height++;
+	}
+	
+	for (u = 0.f; u <= range_u; u += increment_u) {
+		for (float v = 0; v <= range_v; v += increment_v) {
 			surfaceGeom.verts.push_back(E_delta_2(u, v));
 			surfaceGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
 		}
 	}
+
+
+	for (int i = 0; i < surfaceGeom.verts.size(); i++) {
+		if ((i % height) - 1 >= 0 && (i + height) < surfaceGeom.verts.size()) {
+			//unsigned int elements[] = { i, i - 1, i - 1 + height, i - 1 + height, i + height, i };
+			//surfaceGeom.indices.insert(surfaceGeom.indices.end(), std::begin(elements), std::end(elements));
+			surfaceGeom.indices.push_back(i);
+			surfaceGeom.indices.push_back(i - 1);
+			surfaceGeom.indices.push_back(i - 1 + height);
+			surfaceGeom.indices.push_back(i - 1 + height);
+			surfaceGeom.indices.push_back(i + height);
+			surfaceGeom.indices.push_back(i);
+
+		}
+	}
+
+
+	surfaceGeom.normals = std::vector<glm::vec3>(surfaceGeom.verts.size(), glm::vec3(0.0f));
+
+	for (size_t i = 0; i < surfaceGeom.indices.size(); i += 3) {
+		glm::vec3 p1 = surfaceGeom.verts[surfaceGeom.indices[i]];
+		glm::vec3 p2 = surfaceGeom.verts[surfaceGeom.indices[i + 1]];
+		glm::vec3 p3 = surfaceGeom.verts[surfaceGeom.indices[i + 2]];
+
+		glm::vec3 v1 = p2 - p1;
+		glm::vec3 v2 = p3 - p2;
+		glm::vec3 v3 = p1 - p3;
+
+		surfaceGeom.normals[surfaceGeom.indices[i]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v3, v1) / (glm::length(-v3) * glm::length(v1)));
+		surfaceGeom.normals[surfaceGeom.indices[i + 1]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v1, v2) / (glm::length(-v1) * glm::length(v2)));
+		surfaceGeom.normals[surfaceGeom.indices[i + 2]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v2, v3) / (glm::length(-v2) * glm::length(v3)));
+
+	}
+
+
+	for (auto& norms : surfaceGeom.normals) {
+		norms = glm::normalize(norms);
+	}
+
+	std::cout << u << std::endl;
 	
 }
 
 void FreeformSurface::draw() {
-	GPU_Geometry gpuGeom;
+	GPU_Geometry_Index gpuGeom;
 	gpuGeom.setVerts(surfaceGeom.verts);
-	gpuGeom.setCols(surfaceGeom.cols);
+	gpuGeom.setCols(surfaceGeom.normals);
+	gpuGeom.setIndices(surfaceGeom.indices);
 
 	gpuGeom.bind();
 
-	glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
+	//glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
+	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
+
 }
 
 int FreeformSurface::delta(float u, int k, int m, std::vector<int>& knotSequence) {
