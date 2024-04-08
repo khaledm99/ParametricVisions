@@ -1,6 +1,9 @@
 #include "ui.h"
 #include "shader.h"
 #include "framebuffer.h"
+#include "Line.h"
+#include "Triangle.h"
+#include "Camera.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -65,52 +68,52 @@ int main()
     UI ui;
     ui.setWindow(window);
     ui.initImGui();
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+    -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, -1.0f, 
 
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  0.0f, 1.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, 0.f,1.f,0.f, -1.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f,1.f,0.f, 0.0f, -1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.f,1.f,0.f, 0.0f,  1.0f,  0.0f
+};
+      
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-        
-
+    
     unsigned int VBO;
     glGenBuffers(1,&VBO);
     unsigned int VAO;
@@ -124,29 +127,18 @@ int main()
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // 4. then set the vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
-    glBindVertexArray(0);
-
-    unsigned int lVBO;
-    glGenBuffers(1,&lVBO);
-    unsigned int lVAO;
-    glGenVertexArrays(1, &lVAO);
-
-    glBindVertexArray(lVAO);
-    // 2. copy our vertices array in a vertex buffer for OpenGL to use
-    glBindBuffer(GL_ARRAY_BUFFER, lVBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
-    // 4. then set the vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6*sizeof(float)));
+    glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
     glEnable(GL_DEPTH_TEST);
 
     Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
+    Shader axis("./shaders/axis.vs", "./shaders/axis.fs"); 
    
     Framebuffer fb;
     fb.setup(VPWIDTH, VPHEIGHT);
@@ -172,87 +164,49 @@ int main()
         // Render
         s.use();
 
-        // Setup camera matrices
-        glm::mat4 model = glm::mat4(1.f);
-        //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f,1.f,0.f));
-        glm::mat4 initview = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,-ui.viewDistance));
-        glm::mat4 view;
+        Camera cam;
+        
+       
         switch(ui.viewDirection)
         {
             case(0):
-                view = initview;
+                cam.update(glm::vec3(-10.f,0.f,0.f), 0.f,0.f, -10.f);
                 break;
             case(1):
-                view = glm::rotate(initview,glm::radians(90.f) , glm::vec3(0.f,1.f,0.f));
+                cam.update(glm::vec3(0.f,0.f,-10.f), 90.f,0.f, -10.f);
                 break;
             case(2):
-                view = glm::rotate(initview,glm::radians(90.f) , glm::vec3(1.f,0.f,0.f));
+                cam.update(glm::vec3(0.f,10.f,0.f), 0.f,-90.f, -10.f);
                 break;
             case(3):
-                view = glm::rotate(initview,glm::radians(35.f) , glm::vec3(1.f,0.f,0.f));
-                view = glm::rotate(view,glm::radians(-45.f) , glm::vec3(0.f,1.f,0.f));
+                cam.update(glm::vec3(-5.f,5.f,5.f), -45.f,-35.f, -10.f);
+            case(4):
                 break;
+
         }
+
+        glm::mat4 view = cam.lookAt();
+        glm::mat4 model = glm::mat4(1.f);
+
+        s.setVec3("viewPos",cam.pos);
+
         glm::mat4 projection;
         float aspect = vs.x/vs.y;
         if(ui.perspective == 0)
             projection = glm::perspective(glm::radians(45.f),aspect,0.1f,100.f);
         else projection = glm::ortho(-aspect, aspect, -1.f, 1.f, 0.1f, 100.0f);
         
-        glm::vec3 color(0.f,10.f,34.f);
         // Send matrices to shader
-        int modelLoc = glGetUniformLocation(s.id,"model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        modelLoc = glGetUniformLocation(s.id,"view");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(view));
-        modelLoc = glGetUniformLocation(s.id,"projection");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        modelLoc = glGetUniformLocation(s.id,"col");
-        glUniform3f(modelLoc, color.x,color.y,color.z);
-
+        s.setMat4("model", model);
+        s.setMat4("projection", projection);
+        s.setMat4("view", view);
         // draw cube
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-
-        // draw axes
-        model = glm::mat4(1.f);
-        modelLoc = glGetUniformLocation(s.id,"model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-        glBindVertexArray(lVAO);
-        float lineverts[] = {
-            0.f, -100.f, 0.f,
-            0.f, 100.f ,0.f
-        };
-        color = glm::vec3(0.f,1.f,0.f);
-        modelLoc = glGetUniformLocation(s.id,"col");
-        glUniform3f(modelLoc, color.x,color.y,color.z);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
-        glDrawArrays(GL_LINES, 0, 2);
-        lineverts[0] = -100.f;
-        lineverts[1] = 0.f;
-        lineverts[3] = 100.f;
-        lineverts[4] = 0.f;
-        color = glm::vec3(1.f,0.f,0.f);
-        modelLoc = glGetUniformLocation(s.id,"col");
-        glUniform3f(modelLoc, color.x,color.y,color.z);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
-        glDrawArrays(GL_LINES, 0, 2);
-        lineverts[0] = 0.f;
-        lineverts[2] = -100.f;
-        lineverts[3] = 0.f;
-        lineverts[5] = 100.f;
-        color = glm::vec3(0.f,0.f,1.f);
-        modelLoc = glGetUniformLocation(s.id,"col");
-        glUniform3f(modelLoc, color.x,color.y,color.z);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(lineverts), lineverts, GL_STATIC_DRAW);
-        glDrawArrays(GL_LINES, 0, 2);
-
         /*
         std::vector<float> sphereverts;
         float R = 2.f;
-        float step = 0.05;
+        float step = 0.01;
         for(float u=0.f; u<3.14f; u+=step)
         {
             for(float v=0.f; v<3.14f*2.f; v+=step)
@@ -260,6 +214,12 @@ int main()
                 sphereverts.push_back(R*glm::sin(u)*glm::cos(v));
                 sphereverts.push_back(R*glm::sin(v)*glm::sin(u));
                 sphereverts.push_back(R*glm::cos(u));
+                sphereverts.push_back(0.f);
+                sphereverts.push_back(0.f);
+                sphereverts.push_back(1.f);
+                sphereverts.push_back(-glm::sin(v)*glm::cos(u));
+                sphereverts.push_back(-glm::sin(v)*glm::sin(u));
+                sphereverts.push_back(-glm::cos(v));
             }
             
         }
@@ -267,10 +227,32 @@ int main()
         glPointSize(10.f);
         glDrawArrays(GL_POINTS, 0, sphereverts.size()/3);
         */
+        
+        glBindVertexArray(0);
 
+        // Draw axes
+        axis.use();
+        s.setMat4("model", model);
+        s.setMat4("projection", projection);
+        s.setMat4("view", view);
+
+
+        glm::vec3 RED(1.f,0.f,0.f);
+        glm::vec3 GREEN(0.f,1.f,0.f);
+        glm::vec3 YELLOW(1.f,1.f,0.f);
+        Line xaxis(glm::vec3(100.f,0.f,0.f),glm::vec3(-100.f,0.f,0.f),RED);
+        xaxis.draw();
+        Line yaxis(glm::vec3(0.f,100.f,0.f),glm::vec3(0.f,-100.f,0.f),YELLOW);
+        yaxis.draw();
+        Line zaxis(glm::vec3(0.f,0.f,100.f),glm::vec3(0.f,0.f,-100.f),GREEN);
+        zaxis.draw();
+
+        
+        
 
         glBindVertexArray(0);
         fb.unbind();
+
 
         // UI 
         bool change = false;
