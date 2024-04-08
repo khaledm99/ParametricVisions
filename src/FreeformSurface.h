@@ -7,7 +7,7 @@
 class FreeformSurface {
 public:
 	FreeformSurface(std::vector<std::vector<glm::vec3>> &controlPoints, int u_k, int v_k);
-	void build();
+	int build();
 	void draw();
 private:
 	// control points must be  a (u_m +1) x (v_m + 1) matrix

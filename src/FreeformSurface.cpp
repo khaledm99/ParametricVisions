@@ -11,8 +11,12 @@ FreeformSurface::FreeformSurface(std::vector<std::vector<glm::vec3>> &controlPoi
 	v_m = controlPoints.at(0).size() - 1;
 }
 
-void FreeformSurface::build() {
+int FreeformSurface::build() {
 	// add error checking to make sure there are enough con
+	if (v_m + 1 < v_k || u_m + 1 < v_k) {
+		return -1;
+	}
+
 	uKnotSequence = computeStandardKnotSequence(u_k, u_m);
 	vKnotSequence = computeStandardKnotSequence(v_k, v_m);
 
@@ -54,14 +58,9 @@ void FreeformSurface::build() {
 
 	for (int i = 0; i < surfaceGeom.verts.size(); i++) {
 		if ((i % height) - 1 >= 0 && (i + height) < surfaceGeom.verts.size()) {
-			//unsigned int elements[] = { i, i - 1, i - 1 + height, i - 1 + height, i + height, i };
-			//surfaceGeom.indices.insert(surfaceGeom.indices.end(), std::begin(elements), std::end(elements));
-			surfaceGeom.indices.push_back(i);
-			surfaceGeom.indices.push_back(i - 1);
-			surfaceGeom.indices.push_back(i - 1 + height);
-			surfaceGeom.indices.push_back(i - 1 + height);
-			surfaceGeom.indices.push_back(i + height);
-			surfaceGeom.indices.push_back(i);
+			
+			unsigned int elements[] = { i, i - 1, i - 1 + height, i - 1 + height, i + height, i };
+			surfaceGeom.indices.insert(surfaceGeom.indices.end(), std::begin(elements), std::end(elements));
 
 		}
 	}
@@ -89,11 +88,7 @@ void FreeformSurface::build() {
 		norms = glm::normalize(norms);
 	}
 
-	//for (auto& norms : surfaceGeom.normals) {
-	//	std::cout << norms.x << " " << norms.y << " " << norms.z << std::endl;
-	//} 
-
-	//std::cout << u << std::endl;
+	return 0;
 	
 }
 
