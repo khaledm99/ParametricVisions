@@ -15,7 +15,7 @@ void GPU_Geometry::setVerts(const std::vector<glm::vec3>& verts) {
 	vertBuffer.uploadData(sizeof(glm::vec3) * verts.size(), verts.data(), GL_STATIC_DRAW);
 }
 void GPU_Geometry::setNormals(const std::vector<glm::vec3>& normals) {
-	vertBuffer.uploadData(sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
+	normalBuffer.uploadData(sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
 }
 
 
@@ -40,7 +40,7 @@ void GPU_Geometry_Index::setVerts(const std::vector<glm::vec3>& verts) {
 }
 
 void GPU_Geometry_Index::setNormals(const std::vector<glm::vec3>& normals) {
-	vertBuffer.uploadData(sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
+	normalBuffer.uploadData(sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
 }
 
 void GPU_Geometry_Index::setCols(const std::vector<glm::vec3>& cols) {
