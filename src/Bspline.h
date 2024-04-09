@@ -8,6 +8,8 @@
 class Bspline {
 public:
 
+	Bspline(){ }
+
 	Bspline(std::vector<glm::vec3> controlPoints, int k);
 
 	Bspline(const Bspline& other)
@@ -16,6 +18,22 @@ public:
 		k(other.k)
 	{
 
+	}
+
+	Bspline& operator=(const Bspline& other) {
+		if (this != &other) {
+			// Copy controlPoints
+			controlPoints = other.controlPoints;
+
+			// Copy bsplineGeom
+			bsplineGeom = other.bsplineGeom;
+
+			// Copy k
+			k = other.k;
+
+			// Copy other members as needed...
+		}
+		return *this;
 	}
 
 	//creates the geometry of the bspline and stores it into bsplineGeom

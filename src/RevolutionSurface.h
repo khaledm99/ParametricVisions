@@ -10,6 +10,8 @@ private:
 	GPU_Geometry_Index gpuGeom;
 public:
 	RevolutionSurface(Bspline& curve);
+	RevolutionSurface(const RevolutionSurface& other);
+	RevolutionSurface& operator=(const RevolutionSurface& other);
 	void build();
 	void draw();
 };

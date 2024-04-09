@@ -14,6 +14,7 @@
 #include "RevolutionSurface.h"
 #include "Bspline.h"
 #include "FreeformSurface.h"
+#include "RotBlendSurface.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -146,6 +147,19 @@ float vertices[] = {
     std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 4.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
     std::vector<glm::vec3> controlPoints5 = { glm::vec3(0.4,-1.7f, 0.7f), glm::vec3(0.6f,-1.7f, 0.7f), glm::vec3(0.5f,0.4f, 0.7f), glm::vec3(1.1f,0.7f, 0.7f) };
 
+
+    std::vector<glm::vec3> controlPoints6 = { glm::vec3(0.4f, 0.8f, -1.f), glm::vec3(0.7f, 0.4f, -1.f), glm::vec3(0.4f, 0.f, -1.f) };
+
+    std::vector<glm::vec3> controlPoints7 = { glm::vec3(0.1f, 0.8f, -1.f), glm::vec3(0.1f, 0.4f, -1.f), glm::vec3(0.1f, 0.f, -1.f) };
+
+
+    Bspline rbsc1(controlPoints6, 3);
+    rbsc1.build();
+    Bspline rbsc2(controlPoints7, 3);
+    rbsc2.build();
+
+
+
     std::vector<std::vector<glm::vec3>> freeformPoints;
     freeformPoints.push_back(controlPoints);
     freeformPoints.push_back(controlPoints2);
@@ -166,7 +180,8 @@ float vertices[] = {
     RevolutionSurface rs(bspline);
     rs.build();
 
-
+    RotationalBlendSurface rbs(rbsc1, rbsc2);
+    rbs.build();
 
 
     Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
@@ -236,7 +251,9 @@ float vertices[] = {
         //glBindVertexArray(VAO);
         //glDrawArrays(GL_TRIANGLES, 0, 36);
         //rs.draw();
-        ffSurface.draw();
+        //ffSurface.draw();
+        rbs.draw();
+
 
 
         /*
@@ -283,9 +300,9 @@ float vertices[] = {
         Line zaxis(glm::vec3(0.f,0.f,100.f),glm::vec3(0.f,0.f,-100.f),GREEN);
         zaxis.draw();
 
-        bspline.draw();
 
-        bspline2.draw();
+        //rbs.drawMidline();
+
 
 
         

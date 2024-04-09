@@ -15,6 +15,21 @@ RevolutionSurface::RevolutionSurface(Bspline &curve)
 	
 }
 
+RevolutionSurface::RevolutionSurface(const RevolutionSurface& other)
+	: curve(other.curve) {
+	// Copy other members as needed...
+}
+
+RevolutionSurface& RevolutionSurface::operator=(const RevolutionSurface& other) {
+	if (this != &other) {
+		// Copy curve
+		curve = other.curve;
+
+		// Copy other members as needed...
+	}
+	return *this;
+}
+
 void RevolutionSurface::build() {
 	CPU_Geometry curveGeom = curve.getGeom();
 
