@@ -23,6 +23,13 @@ struct CPU_Geometry {
 	std::vector<glm::vec3> normals;
 };
 
+struct CPU_Geometry_Index {
+	std::vector<glm::vec3> verts;
+	std::vector<unsigned int> indices;
+	std::vector<glm::vec3> cols;
+	std::vector<glm::vec3> normals;
+};
+
 
 // VAO and two VBOs for storing vertices and colours, respectively
 class GPU_Geometry {

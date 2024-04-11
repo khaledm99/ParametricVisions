@@ -11,6 +11,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "object.h"
+#include "RevolutionSurface.h"
+#include "Bspline.h"
+#include "FreeformSurface.h"
+#include "RotBlendSurface.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -19,16 +23,16 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0,0,width,height);
+    glViewport(0, 0, width, height);
 }
 bool wire = false;
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
-        glfwSetWindowShouldClose(window,true);
+        glfwSetWindowShouldClose(window, true);
     }
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         wire = !wire;
 
@@ -51,20 +55,20 @@ int main()
     GLFWwindow* window = glfwCreateWindow(WWIDTH,WHEIGHT, "ParametricVisions", NULL, NULL);
     if(window == NULL)
     {
-        std::cout<< "Failed to create GLFW window" << std::endl;
+        std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
 
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cout<< "Failed to initialize GLAD" << std::endl;
+        std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
     glViewport(0,0,VPWIDTH,VPHEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    
+
     UI ui;
     ui.setWindow(window);
     ui.initImGui();
@@ -115,7 +119,7 @@ float vertices[] = {
 
     
     unsigned int VBO;
-    glGenBuffers(1,&VBO);
+    glGenBuffers(1, &VBO);
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
 
@@ -137,6 +141,49 @@ float vertices[] = {
 
     glEnable(GL_DEPTH_TEST);
 
+    std::vector<glm::vec3> controlPoints = { glm::vec3(-0.9f,-0.7f, -0.3f), glm::vec3(-0.6f,-0.4f,- 0.3f), glm::vec3(-0.5f,0.4f, -0.3f), glm::vec3(-1.0f,0.7f, -0.3f) };
+    std::vector<glm::vec3> controlPoints2 = { glm::vec3(-0.7f,-0.7f, 0.3f), glm::vec3(-0.4f,-0.4f, 0.3f), glm::vec3(-0.3f,0.4f, 0.3f), glm::vec3(-0.7f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints3 = { glm::vec3(-0.3,-0.7f, 0.3f), glm::vec3(-0.0f,-0.4f, 0.3f), glm::vec3(0.1f,0.4f, 0.3f), glm::vec3(-0.3f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints4 = { glm::vec3(-0.1,-0.7f, 0.3f), glm::vec3(0.2f,-0.4f, 4.3f), glm::vec3(0.3f,0.4f, 0.3f), glm::vec3(-0.1f,0.7f, 0.3f) };
+    std::vector<glm::vec3> controlPoints5 = { glm::vec3(0.4,-1.7f, 0.7f), glm::vec3(0.6f,-1.7f, 0.7f), glm::vec3(0.5f,0.4f, 0.7f), glm::vec3(1.1f,0.7f, 0.7f) };
+
+
+    std::vector<glm::vec3> controlPoints6 = { glm::vec3(0.4f, 0.8f, -1.f), glm::vec3(0.7f, 0.4f, -1.f), glm::vec3(0.4f, 0.f, -1.f) };
+
+    std::vector<glm::vec3> controlPoints7 = { glm::vec3(0.1f, 0.8f, -1.f), glm::vec3(0.1f, 0.4f, -1.f), glm::vec3(0.1f, 0.f, -1.f) };
+
+
+    Bspline rbsc1(controlPoints6, 3);
+    rbsc1.build();
+    Bspline rbsc2(controlPoints7, 3);
+    rbsc2.build();
+
+
+
+    std::vector<std::vector<glm::vec3>> freeformPoints;
+    freeformPoints.push_back(controlPoints);
+    freeformPoints.push_back(controlPoints2);
+    freeformPoints.push_back(controlPoints3);
+    freeformPoints.push_back(controlPoints4);
+    freeformPoints.push_back(controlPoints5);
+
+
+    FreeformSurface ffSurface(freeformPoints, 3, 3);
+    ffSurface.build();
+
+    Bspline bspline(controlPoints, 3);
+    bspline.build();
+
+    Bspline bspline2(controlPoints5, 3);
+    bspline2.build();
+
+    RevolutionSurface rs(bspline);
+    rs.build();
+
+    RotationalBlendSurface rbs(rbsc1, rbsc2);
+    rbs.build();
+
+
     Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
     Shader axis("./shaders/axis.vs", "./shaders/axis.fs"); 
    
@@ -157,8 +204,8 @@ float vertices[] = {
         if(ui.wire)
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         else
-        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-        glClearColor(0.2f,0.3f,0.3f,1.0f);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Render
@@ -201,8 +248,14 @@ float vertices[] = {
         s.setMat4("projection", projection);
         s.setMat4("view", view);
         // draw cube
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(VAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //rs.draw();
+        //ffSurface.draw();
+        rbs.draw();
+
+
+
         /*
         std::vector<float> sphereverts;
         float R = 2.f;
@@ -247,7 +300,11 @@ float vertices[] = {
         Line zaxis(glm::vec3(0.f,0.f,100.f),glm::vec3(0.f,0.f,-100.f),GREEN);
         zaxis.draw();
 
-        
+
+        //rbs.drawMidline();
+
+
+
         
 
         glBindVertexArray(0);

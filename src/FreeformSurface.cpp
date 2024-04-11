@@ -1,0 +1,174 @@
+#include "FreeformSurface.h"
+#include <glad/glad.h>
+#include <iostream>
+
+FreeformSurface::FreeformSurface(std::vector<std::vector<glm::vec3>> &controlPoints, int u_k, int v_k) {
+	this->u_k = u_k;
+	this->v_k = v_k;
+	this->controlPoints = controlPoints;
+	
+	u_m = controlPoints.size() - 1;
+	v_m = controlPoints.at(0).size() - 1;
+}
+
+int FreeformSurface::build() {
+	// add error checking to make sure there are enough con
+	if (v_m + 1 < v_k || u_m + 1 < v_k) {
+		return -1;
+	}
+
+	uKnotSequence = computeStandardKnotSequence(u_k, u_m);
+	vKnotSequence = computeStandardKnotSequence(v_k, v_m);
+
+	surfaceGeom.cols.clear();
+	surfaceGeom.verts.clear();
+	surfaceGeom.indices.clear();
+
+	float color[3] = { 1.f, 0.f, 0.f }; // Color of new points
+
+
+	int range_v = vKnotSequence.back();
+	float range_u = uKnotSequence.back();
+	float increment_v = 0.05 * range_v;
+	float increment_u = 0.1 * range_u;
+
+	std::cout << range_u << " " << range_v << std::endl;
+	float v;
+
+	int height = 0;
+	for (v = 0.f; v <= range_v; v += increment_v) {
+		height++;
+	}
+
+	bool doOnce = true;
+	
+	for (float u = 0.f; u < range_u; u += increment_u) {
+		for (v = 0; v < range_v; v += increment_v) {
+			//std::cout << "u: " << u << " v: " << v << std::endl;
+			surfaceGeom.verts.push_back(E_delta_2(u, v));
+			surfaceGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
+			
+		}
+		if (u + increment_u > range_u && doOnce == true){
+			u = range_u - 0.01 - increment_u;
+			doOnce = false;
+		}
+	}
+
+
+	for (int i = 0; i < surfaceGeom.verts.size(); i++) {
+		if ((i % height) - 1 >= 0 && (i + height) < surfaceGeom.verts.size()) {
+			
+			unsigned int elements[] = { i, i - 1, i - 1 + height, i - 1 + height, i + height, i };
+			surfaceGeom.indices.insert(surfaceGeom.indices.end(), std::begin(elements), std::end(elements));
+
+		}
+	}
+
+
+	surfaceGeom.normals = std::vector<glm::vec3>(surfaceGeom.verts.size(), glm::vec3(0.0f));
+
+	for (size_t i = 0; i < surfaceGeom.indices.size(); i += 3) {
+		glm::vec3 p1 = surfaceGeom.verts[surfaceGeom.indices[i]];
+		glm::vec3 p2 = surfaceGeom.verts[surfaceGeom.indices[i + 1]];
+		glm::vec3 p3 = surfaceGeom.verts[surfaceGeom.indices[i + 2]];
+
+		glm::vec3 v1 = p2 - p1;
+		glm::vec3 v2 = p3 - p2;
+		glm::vec3 v3 = p1 - p3;
+
+		surfaceGeom.normals[surfaceGeom.indices[i]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v3, v1) / (glm::length(-v3) * glm::length(v1)));
+		surfaceGeom.normals[surfaceGeom.indices[i + 1]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v1, v2) / (glm::length(-v1) * glm::length(v2)));
+		surfaceGeom.normals[surfaceGeom.indices[i + 2]] += glm::normalize(glm::cross(v1, v2)) * (float)acos(glm::dot(-v2, v3) / (glm::length(-v2) * glm::length(v3)));
+
+	}
+
+
+	for (auto& norms : surfaceGeom.normals) {
+		norms = glm::normalize(norms);
+	}
+
+	return 0;
+	
+}
+
+void FreeformSurface::draw() {
+	GPU_Geometry_Index gpuGeom;
+	gpuGeom.setVerts(surfaceGeom.verts);
+	gpuGeom.setCols(surfaceGeom.cols);
+	gpuGeom.setNormals(surfaceGeom.normals);
+	gpuGeom.setIndices(surfaceGeom.indices);
+
+	gpuGeom.bind();
+
+	//glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
+	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
+
+}
+
+int FreeformSurface::delta(float u, int k, int m, std::vector<int>& knotSequence) {
+	for (int i = 0; i < m + k; i++) {
+		// if u is equal to the last and highest value of the knot, we are in trouble
+		if (u >= knotSequence.at(i) && u < knotSequence.at(i + 1)) {
+			return i;
+		}
+	}
+	// std::cout << "invalid value for u = " << u << std::endl;
+	return -1;
+}
+
+std::vector<int> FreeformSurface::computeStandardKnotSequence(int k, int m) {
+	int size = m + k + 1;
+	int padding = k * 2;
+	int knots = size - padding;
+	std::vector<int> U{};
+	for (int i = 0; i < k; i++) {
+		U.push_back(0);
+	}
+	for (int j = 0; j < knots; j++) {
+		U.push_back(U.back() + 1);
+	}
+	int finalPadding = U.back() + 1;
+	for (int i = 0; i < k; i++) {
+		U.push_back(finalPadding);
+	}
+	return U;
+}
+
+
+glm::vec3 FreeformSurface::E_delta_2(float u, float v) {
+	int u_d = delta(u, u_k, u_m, uKnotSequence);
+	int v_d = delta(v, v_k, v_m, vKnotSequence);
+	//std::cout << "got here "<< u_d <<" " << v_d << std::endl;
+
+	std::vector<glm::vec3> C;
+	for (int i = 0; i < u_k; i++) {
+		std::vector<glm::vec3> D;
+		for (int j = 0; j < v_k; j++) {
+			//std::cout << "got here 1" << std::endl;
+			D.push_back(controlPoints.at(u_d - i).at(v_d - j));
+		}
+		//std::cout << "got here 1" << std::endl;
+
+		for (int r = v_k; r >= 2; r--) {
+			int t = v_d;
+			for (int s = 0; s <= r - 2; s++) {
+				float omega = (v - vKnotSequence.at(t)) / (vKnotSequence.at(t + r - 1) - vKnotSequence.at(t));
+				D.at(s) = omega * D.at(s) + (1.f - omega) * D.at(s + 1);
+				t--;
+			}
+		}
+		C.push_back(D.at(0));
+		//return D.at(0);
+	}
+	for (int r = u_k; r >= 2; r--) {
+		int t = u_d;
+		for (int s = 0; s <= r - 2; s++) {
+			float omega = (u - uKnotSequence.at(t)) / (uKnotSequence.at(t + r - 1) - uKnotSequence.at(t));
+			C.at(s) = omega * C.at(s) + (1.f - omega) * C.at(s + 1);
+			t--;
+		}
+	}
+	//std::cout << "got here" << std::endl;
+	return C.at(0);
+}
