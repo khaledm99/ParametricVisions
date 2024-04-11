@@ -38,23 +38,25 @@ public:
 
 	//creates the geometry of the bspline and stores it into bsplineGeom
 	int build();
+    glm::vec3 curve(float u);
 
 	//takes what is in the cpuGeom and draws it to the screen
 	void draw();
 
+    std::vector<float> knotSequence;
 	const CPU_Geometry& getGeom() const { return bsplineGeom; }
-private:
+	int k; //order of the bspline
 	std::vector<glm::vec3> controlPoints;
+private:
 
 	CPU_Geometry bsplineGeom;
 
 	GPU_Geometry gpuGeom;
 
-	int k; //order of the bspline
 
-	int delta(float u, int k, int m, std::vector<int>& knotSequence);
+	int delta(float u, int k, int m, std::vector<float>& knotSequence);
 	
-	glm::vec3 E_delta_1(float u, int k, int m, std::vector<int>& knotSequence, std::vector<glm::vec3>& controlPoints);
+	glm::vec3 E_delta_1(float u, int k, int m, std::vector<float>& knotSequence, std::vector<glm::vec3>& controlPoints);
 
-	std::vector<int> computeStandardKnotSequence(int k, int m);
+	std::vector<float> computeStandardKnotSequence(int k, int m);
 };

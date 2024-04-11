@@ -1,4 +1,6 @@
 #include "ui.h"
+#include "imgui_internal.h"
+#include <GLFW/glfw3.h>
 
 void UI::setWindow(GLFWwindow* w)
 {
@@ -20,6 +22,7 @@ void UI::initImGui()
 bool UI::beginMainWindow()
 {
     bool change = false;
+    static bool firstLoop = true;
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -76,8 +79,34 @@ bool UI::beginMainWindow()
 
     // Submit the DockSpace
     ImGuiIO& io = ImGui::GetIO();
+    
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
+        /*
+        if(firstLoop)
+        {
+            ImVec2 workPos = ImGui::GetMainViewport()->WorkPos;
+            ImVec2 workSize = ImGui::GetMainViewport()->WorkSize;
+            ImVec2 workCenter{workPos.x + workSize.x * 0.5f, workPos.y+workSize.y*0.5f};
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGuiID root_id = ImGui::GetID("Root");
+            ImGui::DockBuilderRemoveNode(dockspace_id);
+            ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags);
+            int w, h;
+            glfwGetWindowSize(window, &w, &h);
+            ImVec2 size{w,h};
+            ImVec2 nodePos{workCenter.x - size.x * 0.5f, workCenter.y - size.y * 0.5f};
+            ImGui::DockBuilderSetNodeSize(dockspace_id,size);
+            ImGui::DockBuilderSetNodePos(dockspace_id, nodePos);
+            ImGuiID dock1 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left,0.5f,nullptr,&dockspace_id);
+            ImGuiID dock2 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right,0.5f,nullptr,&dockspace_id);
+            ImGuiID dock3 = ImGui::DockBuilderSplitNode(dock2, ImGuiDir_Down,0.5f,nullptr,&dock2);
+            ImGui::DockBuilderDockWindow("One", dock1);
+            ImGui::DockBuilderDockWindow("Two", dock2);
+            ImGui::DockBuilderDockWindow("Three", dock3);
+            ImGui::DockBuilderFinish(dockspace_id);
+        }
+        */
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
@@ -86,25 +115,26 @@ bool UI::beginMainWindow()
         //ShowDockingDisabledMessage();
     }
 
+    
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("Options"))
         {
             // Disabling fullscreen would allow the window to be moved to the front of other windows,
             // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
+            bool test;
+            ImGui::MenuItem("Fullscreen", NULL, &test);
+            ImGui::MenuItem("Padding", NULL, &test);
             ImGui::Separator();
 
             ImGui::Separator();
 
-            if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
-                *p_open = false;
             ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();
     }
+    //if(firstLoop) firstLoop = false;
     return change;
 
 }
@@ -115,11 +145,15 @@ void UI::endMainWindowAndRender()
 bool UI::showConfig()
 {
     bool change = false;
+    
     ImGui::Begin("Config");
     change |= ImGui::Checkbox("Toggle Wireframe", &wire);
     change |= ImGui::RadioButton("Perspective", &perspective, 0); ImGui::SameLine();
     change |= ImGui::RadioButton("Orthographic", &perspective, 1);
+    ImGui::Separator();
     change |= ImGui::DragFloat("View Distance", &viewDistance, 0.1f);
+    change |= ImGui::SliderAngle("Camera Pitch", &pitch, -90,90,"%.2f",0);
+    change |= ImGui::SliderAngle("Camera Yaw", &yaw, -90,90,"%.2f",0);
     // Change view direction. Button loop adapted from interactive ImGui Demo
     for(int i =0; i<4;i++)
     {

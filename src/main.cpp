@@ -15,6 +15,9 @@
 #include "Bspline.h"
 #include "FreeformSurface.h"
 #include "RotBlendSurface.h"
+#include "ruledsurface.h"
+#include "bilinearpatch.h"
+#include "coonspatch.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -117,6 +120,7 @@ float vertices[] = {
 };
       
 
+/*
     
     unsigned int VBO;
     glGenBuffers(1, &VBO);
@@ -138,6 +142,7 @@ float vertices[] = {
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6*sizeof(float)));
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
+    */
 
     glEnable(GL_DEPTH_TEST);
 
@@ -152,13 +157,33 @@ float vertices[] = {
 
     std::vector<glm::vec3> controlPoints7 = { glm::vec3(0.1f, 0.8f, -1.f), glm::vec3(0.1f, 0.4f, -1.f), glm::vec3(0.1f, 0.f, -1.f) };
 
+    std::vector<glm::vec3> controlPoints8 = { glm::vec3(-5.f, 0.8f, -3.f), glm::vec3(-5.f, 1.5f, -2.f), glm::vec3(-5.f, 0.2f, 2.f) };
+    std::vector<glm::vec3> controlPoints9 = { glm::vec3(5.f, 0.8f, -3.f), glm::vec3(5.f, 1.5f, -2.f), glm::vec3(5.f, 0.2f, 2.f) };
+    std::vector<glm::vec3> controlPoints11 = { glm::vec3(-5.f, 0.8f, -3.f), glm::vec3(1.f, 3.f, -3.f), glm::vec3(5.f, 0.8f, -3.f) };
+    std::vector<glm::vec3> controlPoints12 = { glm::vec3(-5.f, 0.8f, 2.f), glm::vec3(1.f, -2.f, 3.f), glm::vec3(5.f, 0.8f, 2.f) };
+
 
     Bspline rbsc1(controlPoints6, 3);
     rbsc1.build();
     Bspline rbsc2(controlPoints7, 3);
     rbsc2.build();
 
+    Bspline rlcp1(controlPoints8, 3);
+    rlcp1.build();
+    Bspline rlcp2(controlPoints9, 3);
+    rlcp2.build();
+    Bspline rlcp3(controlPoints11, 3);
+    rlcp3.build();
+    Bspline rlcp4(controlPoints12, 3);
+    rlcp4.build();
+    RuledSurface s0(rlcp1,rlcp2);
+    RuledSurface s1(rlcp3,rlcp4);
+    CoonsPatch c(glm::vec3(-5.f, 0.8f, -3.f),glm::vec3(-5.f, 0.2f, 2.f), glm::vec3(5.f, 0.8f, -3.f),glm::vec3(5.f, 0.2f, 2.f), s0,s1);
+    c.build();
 
+
+
+    std::vector<glm::vec3> controlPoints10 = { glm::vec3(5.f, 2.f, 5.f), glm::vec3(5.f, 0.5f, -5.f), glm::vec3(-5.f, 0.2f, 5.f),glm::vec3(-5.f, 1.f, -5.f) };
 
     std::vector<std::vector<glm::vec3>> freeformPoints;
     freeformPoints.push_back(controlPoints);
@@ -183,6 +208,12 @@ float vertices[] = {
     RotationalBlendSurface rbs(rbsc1, rbsc2);
     rbs.build();
 
+    //RuledSurface ruled(rlsc1,rlsc2);
+    //ruled.build();
+
+    BilinearPatch bp(controlPoints10[0],controlPoints10[1],controlPoints10[2],controlPoints10[3]);
+    bp.build();
+
 
     Shader s("./shaders/shader.vs", "./shaders/shader.fs"); 
     Shader axis("./shaders/axis.vs", "./shaders/axis.fs"); 
@@ -204,7 +235,7 @@ float vertices[] = {
         if(ui.wire)
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         else
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -217,16 +248,17 @@ float vertices[] = {
         switch(ui.viewDirection)
         {
             case(0):
-                cam.update(glm::vec3(-10.f,0.f,0.f), 0.f,0.f, -10.f);
+
+                cam.update(glm::vec3(-1.f,0.f,0.f), 0.f,0.f, ui.viewDistance);
                 break;
             case(1):
-                cam.update(glm::vec3(0.f,0.f,-10.f), 90.f,0.f, -10.f);
+                cam.update(glm::vec3(0.f,0.f,-1.f), 90.f,0.f, ui.viewDistance);
                 break;
             case(2):
-                cam.update(glm::vec3(0.f,10.f,0.f), 0.f,-90.f, -10.f);
+                cam.update(glm::vec3(0.f,1.f,0.f), 0.f,-90.f, ui.viewDistance);
                 break;
             case(3):
-                cam.update(glm::vec3(-5.f,5.f,5.f), -45.f,-35.f, -10.f);
+                cam.update(glm::vec3(-1.f,1.f,1.f), -45.f,-35.f, ui.viewDistance);
             case(4):
                 break;
 
@@ -247,12 +279,18 @@ float vertices[] = {
         s.setMat4("model", model);
         s.setMat4("projection", projection);
         s.setMat4("view", view);
+
         // draw cube
         //glBindVertexArray(VAO);
         //glDrawArrays(GL_TRIANGLES, 0, 36);
+
         //rs.draw();
         //ffSurface.draw();
-        rbs.draw();
+        //rbs.draw();
+        //ruled.draw();
+
+        //bp.draw();
+        c.draw();
 
 
 
@@ -303,9 +341,6 @@ float vertices[] = {
 
         //rbs.drawMidline();
 
-
-
-        
 
         glBindVertexArray(0);
         fb.unbind();

@@ -14,6 +14,8 @@ class UI {
         int perspective = 0;
         float viewDistance = 5.f;
         int viewDirection = 0; 
+        float yaw = 0.f;
+        float pitch = 0.f;
         void setWindow(GLFWwindow* w);
         void initImGui();
         bool beginMainWindow();

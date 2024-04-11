@@ -5,13 +5,13 @@
 Camera::Camera()
 {
     yaw = pitch = 0.f;
-    distance = -10.f;
+    distance = -20.f;
     pos = glm::vec3(0.f,0.f,distance);
 }
 void Camera::reset()
 {
     yaw = pitch = 0.f;
-    distance = -10.f;
+    distance = -20.f;
     pos = glm::vec3(0.f,0.f,distance);
     update();
 }
@@ -28,6 +28,7 @@ void Camera::update(glm::vec3 pos, float yaw, float pitch, float distance)
         front = glm::normalize(direction);
         right = glm::normalize(glm::cross(front,glm::vec3(0.f,1.f,0.f)));
         up = glm::normalize(glm::cross(right, front));
+    this->pos *= distance;
 }
 void Camera::update(float yaw, float pitch)
 {
@@ -38,6 +39,7 @@ void Camera::update(float yaw, float pitch)
 void Camera::update(float distance)
 {
     this->distance = distance;
+    this->pos *= distance;
     update();
 }
 void Camera::update()
