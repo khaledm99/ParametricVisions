@@ -12,8 +12,7 @@ class UI {
     public:
         bool wire = false;
         int perspective = 0;
-        float viewDistance = 5.f;
-        int viewDirection = 0; 
+        float viewDistance = -10.f;
         float yaw = 0.f;
         float pitch = 0.f;
         void setWindow(GLFWwindow* w);

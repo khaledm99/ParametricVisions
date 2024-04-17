@@ -152,8 +152,10 @@ bool UI::showConfig()
     change |= ImGui::RadioButton("Orthographic", &perspective, 1);
     ImGui::Separator();
     change |= ImGui::DragFloat("View Distance", &viewDistance, 0.1f);
-    change |= ImGui::SliderAngle("Camera Pitch", &pitch, -90,90,"%.2f",0);
-    change |= ImGui::SliderAngle("Camera Yaw", &yaw, -90,90,"%.2f",0);
+    change |= ImGui::DragFloat("Azimuth", &pitch, 0.1f);
+    change |= ImGui::DragFloat("Polar", &yaw, 0.1f);
+    //change |= ImGui::SliderAngle("Camera Pitch", &pitch, 0, 360.f,"%.2f",0);
+    //change |= ImGui::SliderAngle("Camera Yaw", &yaw, 0, 360.f,"%.2f",0);
     // Change view direction. Button loop adapted from interactive ImGui Demo
     for(int i =0; i<4;i++)
     {
@@ -166,16 +168,16 @@ bool UI::showConfig()
         switch(i) 
         {
             case(0):
-                if(ImGui::Button("X")) viewDirection = i;
+                //if(ImGui::Button("X")) viewDirection = i;
                 break;
             case(1):
-                if(ImGui::Button("Y")) viewDirection = i;
+                //if(ImGui::Button("Y")) viewDirection = i;
                 break;
             case(2):
-                if(ImGui::Button("Z")) viewDirection = i;
+                //if(ImGui::Button("Z")) viewDirection = i;
                 break;
             case(3):
-                if(ImGui::Button("Ortho")) viewDirection = i;
+                //if(ImGui::Button("Ortho")) viewDirection = i;
                 break;
         }
         ImGui::PopStyleColor(3);

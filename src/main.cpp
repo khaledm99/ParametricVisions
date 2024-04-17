@@ -42,6 +42,31 @@ void processInput(GLFWwindow* window)
     }
 
 }
+// from https://nerdhut.de/2019/12/04/arcball-camera-opengl/
+void mouseCallback(GLFWwindow *window, int button, int action, int mods)
+{
+    // Whenever the left mouse button is pressed, the
+    // mouse cursor's position is stored for the arc-
+    // ball camera as a reference.
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double curr_x = 0, curr_y = 0;
+ 
+        glfwGetCursorPos(window, &curr_x, &curr_y);
+ 
+        // last is a global vec3 variable
+        //last = vec3(curr_x, curr_y, -1);
+ 
+        // This is another global variable
+        //ballEnabled = true;
+    }
+ 
+    // When the user releases the left mouse button,
+    // all we have to do is to reset the flag.
+    //if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+        //ballEnabled = false;
+}
+
 
 int main()
 {
@@ -71,6 +96,9 @@ int main()
     }
     glViewport(0,0,VPWIDTH,VPHEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	
+    glfwSetMouseButtonCallback(window, mouseCallback);
+
 
     UI ui;
     ui.setWindow(window);
@@ -241,6 +269,7 @@ float vertices[] = {
     auto vs = ui.getViewportSize();
     vs.x = VPWIDTH;
     vs.y = VPHEIGHT;
+    Camera cam;
     while(!glfwWindowShouldClose(window))
     {
         
@@ -259,38 +288,27 @@ float vertices[] = {
         // Render
         s.use();
 
-        Camera cam;
         
-       
-        switch(ui.viewDirection)
-        {
-            case(0):
+      
 
-                cam.update(glm::vec3(-1.f,0.f,0.f), 0.f,0.f, ui.viewDistance);
-                break;
-            case(1):
-                cam.update(glm::vec3(0.f,0.f,-1.f), 90.f,0.f, ui.viewDistance);
-                break;
-            case(2):
-                cam.update(glm::vec3(0.f,1.f,0.f), 0.f,-90.f, ui.viewDistance);
-                break;
-            case(3):
-                cam.update(glm::vec3(-1.f,1.f,1.f), -45.f,-35.f, ui.viewDistance);
-            case(4):
-                break;
-
-        }
-
+        cam.update(glm::vec3(-1.f,0.f,0.f), ui.yaw,ui.pitch, ui.viewDistance);
         glm::mat4 view = cam.lookAt();
-        glm::mat4 model = glm::mat4(1.f);
 
+        glm::mat4 model = glm::mat4(1.f);
         s.setVec3("viewPos",cam.pos);
 
         glm::mat4 projection;
         float aspect = vs.x/vs.y;
         if(ui.perspective == 0)
+        {
             projection = glm::perspective(glm::radians(45.f),aspect,0.1f,100.f);
-        else projection = glm::ortho(-aspect, aspect, -1.f, 1.f, 0.1f, 100.0f);
+            model = glm::mat4(1.f);
+        }
+        else 
+        {
+            projection = glm::ortho(-aspect, aspect, -1.f, 1.f, -100.f, 100.f);
+            model = glm::scale(glm::mat4(1.f), glm::vec3(0.2f));
+        }
         
         // Send matrices to shader
         s.setMat4("model", model);

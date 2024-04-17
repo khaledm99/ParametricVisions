@@ -7,14 +7,14 @@ class Camera {
 public:
     Camera();
     void reset();
-    void update(glm::vec3 pos, float yaw, float pitch, float distance);
-    void update(float yaw, float pitch);
-    void update(float distance);
+    void update(glm::vec3 pos, float polar, float azimuth, float radius);
+    void update(float polar, float azimuth);
+    void update(float radius);
     glm::mat4 lookAt();
     
-    float yaw;
-    float pitch; 
-    float distance;
+    float radius;
+    float polar;
+    float azimuth;
     glm::vec3 pos;
     glm::vec3 front;
     glm::vec3 right;
