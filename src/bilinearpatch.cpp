@@ -40,8 +40,8 @@ void BilinearPatch::build()
 	surfaceGeom.normals.clear();
 	surfaceGeom.indices.clear();
 
-    float increment_u = 0.05f;
-    float increment_v = 0.05f;
+    float increment_u = 0.01f;
+    float increment_v = 0.01f;
     int v_stride=0;
     for(float v=0.f;v<=1.f;v+=increment_v)
     {
@@ -108,5 +108,4 @@ void BilinearPatch::draw() {
 	//glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
 	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
 
-    std::cout<<"exitdraw"<<std::endl;
 }

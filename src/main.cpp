@@ -157,10 +157,23 @@ float vertices[] = {
 
     std::vector<glm::vec3> controlPoints7 = { glm::vec3(0.1f, 0.8f, -1.f), glm::vec3(0.1f, 0.4f, -1.f), glm::vec3(0.1f, 0.f, -1.f) };
 
-    std::vector<glm::vec3> controlPoints8 = { glm::vec3(-5.f, 0.8f, -3.f), glm::vec3(-5.f, 1.5f, -2.f), glm::vec3(-5.f, 0.2f, 2.f) };
+    std::vector<glm::vec3> controlPoints8 = { glm::vec3(-5.f, 0.8f, -3.f),glm::vec3(-5.f, -2.f, 1.f), glm::vec3(-5.f, 1.5f, -2.f), glm::vec3(-5.f, 0.2f, 2.f) };
     std::vector<glm::vec3> controlPoints9 = { glm::vec3(5.f, 0.8f, -3.f), glm::vec3(5.f, 1.5f, -2.f), glm::vec3(5.f, 0.2f, 2.f) };
     std::vector<glm::vec3> controlPoints11 = { glm::vec3(-5.f, 0.8f, -3.f), glm::vec3(1.f, 3.f, -3.f), glm::vec3(5.f, 0.8f, -3.f) };
-    std::vector<glm::vec3> controlPoints12 = { glm::vec3(-5.f, 0.8f, 2.f), glm::vec3(1.f, -2.f, 3.f), glm::vec3(5.f, 0.8f, 2.f) };
+    std::vector<glm::vec3> controlPoints12 = { glm::vec3(-5.f, 0.2f, 2.f), glm::vec3(1.f, -2.f, 3.f), glm::vec3(5.f, 0.2f, 2.f) };
+
+    std::vector<glm::vec3> P0cps = {glm::vec3(-1.f,-1.f,0.f),glm::vec3(0.f,1.f,0.f),glm::vec3(1.f,0.f,0.f)};
+    std::vector<glm::vec3> P1cps = {glm::vec3(-1.f,0.f,0.f),glm::vec3(0.f,-1.f,0.f),glm::vec3(1.f,1.f,0.f)};
+    std::vector<glm::vec3> Q0cps = {glm::vec3(-1.f,-1.f,0.f),glm::vec3(-0.3f,1.f,0.f),glm::vec3(1.f,0.f,0.f)};
+    std::vector<glm::vec3> Q1cps = {glm::vec3(-1.f,0.f,0.f),glm::vec3(0.3f,1.f,0.f),glm::vec3(1.f,1.f,0.f)};
+    Bspline p0(P0cps,3);
+    p0.build();
+    Bspline p1(P1cps,3);
+    p1.build();
+    Bspline q0(Q0cps,3);
+    q0.build();
+    Bspline q1(Q1cps,3);
+    q1.build();
 
 
     Bspline rbsc1(controlPoints6, 3);
@@ -177,8 +190,12 @@ float vertices[] = {
     Bspline rlcp4(controlPoints12, 3);
     rlcp4.build();
     RuledSurface s0(rlcp1,rlcp2);
+    s0.build();
     RuledSurface s1(rlcp3,rlcp4);
-    CoonsPatch c(glm::vec3(-5.f, 0.8f, -3.f),glm::vec3(-5.f, 0.2f, 2.f), glm::vec3(5.f, 0.8f, -3.f),glm::vec3(5.f, 0.2f, 2.f), s0,s1);
+    s1.build();
+    BilinearPatch s2(controlPoints8[3],controlPoints8[0],controlPoints12[2],controlPoints9[0]);
+    s2.build();
+    CoonsPatch c(p0,p1,q0,q1);
     c.build();
 
 
@@ -292,6 +309,18 @@ float vertices[] = {
         //bp.draw();
         c.draw();
 
+        //rlcp1.draw();
+        //rlcp2.draw();
+        //rlcp3.draw();
+        //rlcp4.draw();
+        //s0.draw();
+        //RuledSurface s0(rlcp1,rlcp2);
+        //RuledSurface s1(rlcp3,rlcp4);
+
+        //p0.draw();
+        //p1.draw();
+        //q0.draw();
+        //q1.draw();
 
 
         /*

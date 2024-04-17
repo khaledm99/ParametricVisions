@@ -53,9 +53,10 @@ void RuledSurface::build()
 
 	//int range_u = curve_a.knotSequence.back();
     float range_u = curve_a.knotSequence[curve_a.controlPoints.size()];
-	float increment_u = 0.05 * range_u;
+	//float increment_u = 0.05 * range_u;
+	float increment_u = 0.01f;
 
-	float increment_v = 0.05f;
+	float increment_v = 0.01f;
      //v_stride = 1.f/increment_v;
     int v_stride=0;
     for(float v=0.f;v<=1.f;v+=increment_v)
@@ -67,7 +68,8 @@ void RuledSurface::build()
 	bool doOnceU = true;
 	bool doOnceV = true;
 	
-	for (float u = curve_a.knotSequence[curve_a.k-1]; u <= range_u; u += increment_u) {
+	//for (float u = curve_a.knotSequence[curve_a.k-1]; u <= range_u; u += increment_u) {
+	for (float u = 0.f; u <= 1.f; u += increment_u) {
 		for (float v = 0.f; v <= 1.f; v += increment_v) {
 			//std::cout << "u: " << u << " v: " << v << std::endl;
             if (v + increment_v > 1.f && doOnceV == true){
@@ -79,9 +81,9 @@ void RuledSurface::build()
 			surfaceGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
 			
 		}
-		if (u + increment_u > range_u && doOnceU == true){
+		if (u + increment_u > 1.f && doOnceU == true){
 			//u = range_u - 0.01 - increment_u;
-            u = range_u;
+            u = 1.f;
 			doOnceU = false;
 		}
 	}
@@ -131,5 +133,4 @@ void RuledSurface::draw() {
 	//glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
 	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
 
-    std::cout<<"exitdraw"<<std::endl;
 }
