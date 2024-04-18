@@ -13,12 +13,28 @@ void UI::initImGui()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    ImGui::LoadIniSettingsFromMemory(defaultLayout);
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init();
+    auto verticalLine = std::vector<glm::vec3>{glm::vec3{0.f,1.f,0.f},glm::vec3{0.f,0.5f,0.f},glm::vec3{0.f,0.f,0.f},glm::vec3{0.f,-0.5f,0.f},glm::vec3{0.f,-0.75f,0.f},glm::vec3{0.f,-1.f,0.f}};
+    auto shiftedVerticalLine = std::vector<glm::vec3>{glm::vec3{1.f,1.f,0.f},glm::vec3{1.f,0.5f,0.f},glm::vec3{1.f,0.f,0.f},glm::vec3{1.f,-0.5f,0.f},glm::vec3{1.f,-0.75f,0.f},glm::vec3{1.f,-1.f,0.f}};
+    auto horizontalLine = std::vector<glm::vec3>{glm::vec3{-1.f,0.f,0.f},glm::vec3{-0.5f,0.f,0.f},glm::vec3{0.f,0.f,0.f},glm::vec3{0.5f,0.f,0.f},glm::vec3{1.f,0.f,0.f}};
+    auto diagonalLine = std::vector<glm::vec3>{glm::vec3{0.f,1.f,0.f},glm::vec3{0.25f,0.75f,0.f},glm::vec3{0.5f,0.5f,0.f},glm::vec3{0.75f,0.25f,0.f},glm::vec3{1.f,0.f,0.f}};
+
+    auto bigCircle = std::vector<glm::vec3>{glm::vec3{-0.0154526,0.845475,0},glm::vec3{-0.554084,0.567329,0},glm::vec3{-0.88521,-0.00220752,0},glm::vec3{-0.554084,-0.580574,0},glm::vec3{-0.0198675,-0.87638,0},glm::vec3{0.567329,-0.571744,0},glm::vec3{0.818985,0.00220752,0},glm::vec3{0.549669,0.536424,0},glm::vec3{-0.00220752,0.84106,0},};
+auto littleCircle = std::vector<glm::vec3>{glm::vec3{0.540839,0.620309,0},glm::vec3{0.311258,0.611479,0},glm::vec3{0.214128,0.523179,0},glm::vec3{0.178808,0.298013,0},glm::vec3{0.192053,0.0331126,0},glm::vec3{0.284768,-0.0507727,0},glm::vec3{0.527594,-0.0860927,0},glm::vec3{0.774834,-0.0507727,0},glm::vec3{0.88521,0.0684327,0},glm::vec3{0.889625,0.275938,0},glm::vec3{0.85872,0.492274,0},glm::vec3{0.748344,0.615894,0},glm::vec3{0.584989,0.624724,0},};
+    auto tinyCircle = std::vector<glm::vec3>{glm::vec3{0.554084,0.134658,0},glm::vec3{0.509934,0.108168,0},glm::vec3{0.479029,0.0860927,0},glm::vec3{0.452539,0.0375276,0},glm::vec3{0.461369,-0.0110375,0},glm::vec3{0.474614,-0.0684327,0},glm::vec3{0.501104,-0.108168,0},glm::vec3{0.536424,-0.103753,0},glm::vec3{0.571744,-0.0949228,0},glm::vec3{0.629139,-0.0728477,0},glm::vec3{0.651214,-0.0242826,0},glm::vec3{0.660044,0.0463576,0},glm::vec3{0.655629,0.0772627,0},glm::vec3{0.642384,0.103753,0},glm::vec3{0.589404,0.130243,0},glm::vec3{0.567329,0.130243,0},};
+    curves.push_back(Bspline(verticalLine,3));
+    curves.push_back(Bspline(shiftedVerticalLine,3));
+    curves.push_back(Bspline(diagonalLine,3));
+    curves.push_back(Bspline(horizontalLine,3));
+    curves.push_back(Bspline(bigCircle,3));
+    curves.push_back(Bspline(littleCircle,3));
+    curves.push_back(Bspline(tinyCircle,3));
     returnedCurves.resize(4);
 }
 
@@ -87,10 +103,6 @@ bool UI::beginMainWindow()
     {
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-    }
-    else
-    {
-        //ShowDockingDisabledMessage();
     }
 
     
@@ -168,12 +180,39 @@ bool UI::showConfig()
     ImGui::Separator();
 
     static Surface st = NONE;
+    static Surface previous = NONE;
+    const char* curveIndices[] = {"Vertical Line"
+                                  ,"Shifted Vertical Line"
+                                  ,"Diagonal Line"
+                                  ,"Horizontal Line"
+                                  ,"Big Circle"
+                                  ,"Little Circle"
+                                  ,"Tiny Circle"
+                                  ,"Curve 1"
+                                  ,"Curve 2"
+                                  ,"Curve 3"
+                                  ,"Curve 4"
+                                  ,"Curve 5"
+                                  ,"Curve 6"
+                                  ,"Curve 7"
+                                  ,"Curve 8"
+                                  ,"Curve 9"
+                                  ,"Curve 10"};
     switch(surfaceType) 
     {
         case RULED:
         {
             static int curve_a = 0; 
-            const char* combo_preview_value = std::to_string(curve_a).c_str();
+            static int curve_b = 0; 
+            if(surfaceType!= previous) {
+                std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+                curve_a = 0;
+                curve_b = 0;
+                build = true;
+            }
+            previous = surfaceType;
+            //const char* combo_preview_value = std::to_string(curve_a).c_str();
+            const char* combo_preview_value = curveIndices[curve_a];
             if (ImGui::BeginCombo("Select Curve 1", combo_preview_value, 0))
             {
                 if(curves.size()>0)
@@ -181,7 +220,7 @@ bool UI::showConfig()
                     for (int n = 0; n < curves.size(); n++)
                     {
                         const bool is_selected = (curve_a == n);
-                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        if (ImGui::Selectable(curveIndices[n], is_selected))
                         {
                             curve_a = n;
                             returnedCurves[0] = n;
@@ -196,8 +235,7 @@ bool UI::showConfig()
 
 
             }
-            static int curve_b = 0; 
-            combo_preview_value = std::to_string(curve_b).c_str();
+            combo_preview_value = curveIndices[curve_b];
             if (ImGui::BeginCombo("Select Curve 2", combo_preview_value, 0))
             {
                 if(curves.size()>0)
@@ -205,7 +243,7 @@ bool UI::showConfig()
                     for (int n = 0; n < curves.size(); n++)
                     {
                         const bool is_selected = (curve_b == n);
-                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        if (ImGui::Selectable(curveIndices[n], is_selected))
                         {
                             curve_b = n;
                             returnedCurves[1] = n;
@@ -223,8 +261,21 @@ bool UI::showConfig()
             break;
         case COONS:
             {
-                static int p0 = 0; 
-                const char* combo_preview_value = std::to_string(p0).c_str();
+            static int p0 = 0; 
+            static int p1 = 0; 
+            static int q0 = 0; 
+            static int q1 = 0; 
+            if(surfaceType!= previous) {
+                std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+                p0 = 0;
+                p1 = 0;
+                q0 = 0;
+                q1 = 0;
+                build = true;
+            }
+            previous = surfaceType;
+            //std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+                combo_preview_value = curveIndices[p0];
                 if (ImGui::BeginCombo("Select P0", combo_preview_value, 0))
                 {
                     if(curves.size()>0)
@@ -232,7 +283,7 @@ bool UI::showConfig()
                         for (int n = 0; n < curves.size(); n++)
                         {
                             const bool is_selected = (p0 == n);
-                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            if (ImGui::Selectable(curveIndices[n], is_selected))
                             {
                                 p0 = n;
                                 returnedCurves[0] = n;
@@ -247,8 +298,7 @@ bool UI::showConfig()
 
 
                 }
-                static int p1 = 0; 
-                combo_preview_value = std::to_string(p1).c_str();
+                combo_preview_value = curveIndices[p1];
                 if (ImGui::BeginCombo("Select P1", combo_preview_value, 0))
                 {
                     if(curves.size()>0)
@@ -256,7 +306,7 @@ bool UI::showConfig()
                         for (int n = 0; n < curves.size(); n++)
                         {
                             const bool is_selected = (p1 == n);
-                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            if (ImGui::Selectable(curveIndices[n], is_selected))
                             {
                                 p1 = n;
                                 returnedCurves[1] = n;
@@ -269,8 +319,7 @@ bool UI::showConfig()
                     }
                     ImGui::EndCombo();
                 }
-                static int q0 = 0; 
-                combo_preview_value = std::to_string(q0).c_str();
+                combo_preview_value = curveIndices[q0];
                 if (ImGui::BeginCombo("Select Q0", combo_preview_value, 0))
                 {
                     if(curves.size()>0)
@@ -278,7 +327,7 @@ bool UI::showConfig()
                         for (int n = 0; n < curves.size(); n++)
                         {
                             const bool is_selected = (q0 == n);
-                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            if (ImGui::Selectable(curveIndices[n], is_selected))
                             {
                                 q0 = n;
                                 returnedCurves[2] = n;
@@ -293,8 +342,7 @@ bool UI::showConfig()
 
 
                 }
-                static int q1 = 0; 
-                combo_preview_value = std::to_string(q1).c_str();
+                combo_preview_value = curveIndices[q1];
                 if (ImGui::BeginCombo("Select Q1", combo_preview_value, 0))
                 {
                     if(curves.size()>0)
@@ -302,7 +350,7 @@ bool UI::showConfig()
                         for (int n = 0; n < curves.size(); n++)
                         {
                             const bool is_selected = (q1 == n);
-                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            if (ImGui::Selectable(curveIndices[n], is_selected))
                             {
                                 q1 = n;
                                 returnedCurves[3] = n;
@@ -326,7 +374,16 @@ bool UI::showConfig()
         case ROTATIONAL:
             {
             static int curve_a = 0; 
-            const char* combo_preview_value = std::to_string(curve_a).c_str();
+            static int curve_b = 0; 
+            if(surfaceType!= previous) {
+                std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+                curve_a = 0;
+                curve_b = 0;
+                build = true;
+            }
+            previous = surfaceType;
+            //std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+            combo_preview_value = curveIndices[curve_a];
             if (ImGui::BeginCombo("Select Curve 1", combo_preview_value, 0))
             {
                 if(curves.size()>0)
@@ -334,7 +391,7 @@ bool UI::showConfig()
                     for (int n = 0; n < curves.size(); n++)
                     {
                         const bool is_selected = (curve_a == n);
-                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        if (ImGui::Selectable(curveIndices[n], is_selected))
                         {
                             curve_a = n;
                             returnedCurves[0] = n;
@@ -349,8 +406,7 @@ bool UI::showConfig()
 
 
             }
-            static int curve_b = 0; 
-            combo_preview_value = std::to_string(curve_b).c_str();
+            combo_preview_value = curveIndices[curve_b];
             if (ImGui::BeginCombo("Select Curve 2", combo_preview_value, 0))
             {
                 if(curves.size()>0)
@@ -358,7 +414,7 @@ bool UI::showConfig()
                     for (int n = 0; n < curves.size(); n++)
                     {
                         const bool is_selected = (curve_b == n);
-                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        if (ImGui::Selectable(curveIndices[n], is_selected))
                         {
                             curve_b = n;
                             returnedCurves[1] = n;
@@ -376,7 +432,14 @@ bool UI::showConfig()
         case REVOLUTION:
             {
             static int curve_a = 0; 
-            const char* combo_preview_value = std::to_string(curve_a).c_str();
+            if(surfaceType!= previous) {
+                std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+                curve_a = 0;
+                build = true;
+            }
+            previous = surfaceType;
+            //std::fill(returnedCurves.begin(), returnedCurves.end(), 0);
+            combo_preview_value = curveIndices[curve_a];
             if (ImGui::BeginCombo("Select Curve 1", combo_preview_value, 0))
             {
                 if(curves.size()>0)
@@ -384,7 +447,7 @@ bool UI::showConfig()
                     for (int n = 0; n < curves.size(); n++)
                     {
                         const bool is_selected = (curve_a == n);
-                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        if (ImGui::Selectable(curveIndices[n], is_selected))
                         {
                             curve_a = n;
                             returnedCurves[0] = n;
@@ -406,34 +469,7 @@ bool UI::showConfig()
         default:
             break;
     }
-
-    // Change view direction. Button loop adapted from interactive ImGui Demo
-    for(int i =0; i<4;i++)
-    {
-        if(i>0)
-            ImGui::SameLine();
-        ImGui::PushID(i);
-        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(i / 7.0f, 0.7f, 0.7f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(i / 7.0f, 0.8f, 0.8f));
-        switch(i) 
-        {
-            case(0):
-                //if(ImGui::Button("X")) viewDirection = i;
-                break;
-            case(1):
-                //if(ImGui::Button("Y")) viewDirection = i;
-                break;
-            case(2):
-                //if(ImGui::Button("Z")) viewDirection = i;
-                break;
-            case(3):
-                //if(ImGui::Button("Ortho")) viewDirection = i;
-                break;
-        }
-        ImGui::PopStyleColor(3);
-        ImGui::PopID();
-    }
+    
     ImGui::End();
     return change;
 }
@@ -455,14 +491,10 @@ bool UI::showCurvePanel()
     static std::vector<glm::vec3> cps;
     static ImVec2 scrolling(0.0f, 0.0f);
     static bool opt_enable_grid = true;
-    static bool opt_enable_context_menu = true;
     static bool adding_line = false;
 
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
-    ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
     ImGui::Text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.");
-    //static Bspline* spline = NULL;
-
     
     if(ImGui::Button("Save Curve"))
     {
@@ -475,20 +507,23 @@ bool UI::showCurvePanel()
 
         }
         
-        else ImGui::Text("No curve to save!");
+    }
+    if(ImGui::Button("Print Control Points"))
+    {
+        if(spline.controlPoints.size()>4) 
+        {
+            std::cout<<"std::vector<glm::vec3>{";
+            for(auto p: spline.controlPoints)
+            {
+                std::cout<<"glm::vec3{"<<p.x<<","<<p.y<<","<<p.z<<"},";
+            }
+            std::cout<<"}"<<std::endl;
+
+        }
+        
     }
     
-    // Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
-    // Here we demonstrate that this can be replaced by simple offsetting + custom drawing + PushClipRect/PopClipRect() calls.
-    // To use a child window instead we could use, e.g:
-    //      ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));      // Disable padding
-    //      ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 50, 255));  // Set a background color
-    //      ImGui::BeginChild("canvas", ImVec2(0.0f, 0.0f), ImGuiChildFlags_Border, ImGuiWindowFlags_NoMove);
-    //      ImGui::PopStyleColor();
-    //      ImGui::PopStyleVar();
-    //      [...]
-    //      ImGui::EndChild();
-
+    // Canvas code from online imgui demo
     // Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
     ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
     ImVec2 canvas_sz = ImGui::GetContentRegionAvail();   // Resize canvas to what's available
@@ -516,67 +551,33 @@ bool UI::showCurvePanel()
         auto normx = ((mouse_pos_in_canvas.x - 0.f)/(canvas_sz.x - 0.f) ) * (1.f - (-1.f)) + -1.f;
         auto normy = ((mouse_pos_in_canvas.y - 0.f)/(canvas_sz.x - 0.f) ) * (1.f - (-1.f)) + -1.f;
         points.push_back(ImVec2(normx,normy));
-        cps.push_back(glm::vec3(normx,normy,0.f));
-        std::cout<<"pushed"<<std::endl;
-        //points.push_back(mouse_pos_in_canvas);
-        //adding_line = true;
+        cps.push_back(glm::vec3(normx,-normy,0.f));
     }
-    /*
-    if (adding_line)
-    {
-        points.back() = mouse_pos_in_canvas;
-        if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
-            adding_line = false;
-    }
-    */
-
-    // Pan (we use a zero mouse threshold when there's no context menu)
-    // You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
-    /*
-    const float mouse_threshold_for_pan = opt_enable_context_menu ? -1.0f : 0.0f;
-    if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan))
-    {
-        scrolling.x += io.MouseDelta.x;
-        scrolling.y += io.MouseDelta.y;
-    }
-    */
-
-    // Context menu (under default mouse threshold)
-    /*
-    ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
-    if (opt_enable_context_menu && drag_delta.x == 0.0f && drag_delta.y == 0.0f)
-        ImGui::OpenPopupOnItemClick("context", ImGuiPopupFlags_MouseButtonRight);
-    if (ImGui::BeginPopup("context"))
-    {
-        if (adding_line)
-            points.resize(points.size() - 2);
-        adding_line = false;
-        if (ImGui::MenuItem("Remove one", NULL, false, points.Size > 0)) { points.resize(points.size() - 2); }
-        if (ImGui::MenuItem("Remove all", NULL, false, points.Size > 0)) { points.clear(); }
-        ImGui::EndPopup();
-    }
-    */
+    
 
     // Draw grid 
+    auto xcol = IM_COL32(255,0,0,255);
+    auto ycol = IM_COL32(0,255,0,255);
+    auto grey = IM_COL32(200, 200, 200, 40);
     draw_list->PushClipRect(canvas_p0, canvas_p1, true);
     if (opt_enable_grid)
     {
-        const float GRID_STEP = 64.0f;
+        const float GRID_STEP = 32.0f;
         for (float x = 0.f; x < canvas_sz.x; x += GRID_STEP)
-            draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40));
-        for (float y = 0.f; y < canvas_sz.y; y += GRID_STEP)
-            draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), IM_COL32(200, 200, 200, 40));
+            draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), ((glm::abs(canvas_sz.x/2 - x)) <8.f) ? ycol : grey);
+        for (float y = 0.f; y < canvas_sz.x; y += GRID_STEP)
+            draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y),((glm::abs(canvas_sz.x/2 - y)) <8.f) ? xcol : grey) ;
     }
 
-    // Draw points + curve
+    // Draw points 
     for (int n = 0; n < points.Size; n ++)
     {
-        //draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
         auto scalex = ((points[n].x - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
         auto scaley = ((points[n].y - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
         draw_list->AddCircle( ImVec2(origin.x + scalex, origin.y + scaley), 2.f,IM_COL32(255, 255, 0, 255) ,32.f, 0.2f);
     }
     
+    // Draw curve
     if(cps.size()>4)
     {
         spline = Bspline(cps,3);
@@ -585,13 +586,12 @@ bool UI::showCurvePanel()
         float step = 0.001;
         for (float u = 0.f; u < 1.f-step; u +=step)
         {
-            //draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
             auto point1 = spline.curve(u);
             auto scalex1 = ((point1.x - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
-            auto scaley1 = ((point1.y - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+            auto scaley1 = ((point1.y - -1.f)/(1.f - -1.f) ) * (0 - canvas_sz.x) + canvas_sz.x;
             auto point2 = spline.curve(u+step);
             auto scalex2 = ((point2.x - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
-            auto scaley2 = ((point2.y - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+            auto scaley2 = ((point2.y - -1.f)/(1.f - -1.f) ) *(0 - canvas_sz.x) + canvas_sz.x;
             draw_list->AddLine(ImVec2(origin.x + scalex1, origin.y + scaley1), ImVec2(origin.x + scalex2, origin.y + scaley2), IM_COL32(255, 255, 0, 255), 2.0f);
         }
     }
@@ -599,7 +599,7 @@ bool UI::showCurvePanel()
 
     draw_list->PopClipRect();
 
-        ImGui::End();
+    ImGui::End();
     return change;
 }
 void UI::render()

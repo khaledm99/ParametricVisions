@@ -21,7 +21,6 @@ int Bspline::build() {
 	//int range = knotSequence.back();
     int range = this->controlPoints.size();
 	float increment = 0.01;
-	//for (float u = knotSequence.at((this->k)-1); u <= knotSequence.at(range); u += increment) {
 	for (float u = 0.f; u <= 1.f; u += increment) {
         bsplineGeom.verts.push_back(curve(u));
 		bsplineGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
@@ -39,11 +38,19 @@ glm::vec3 Bspline::curve(float u){
 
 // bpsline needs to be built before drawn
 void Bspline::draw() {
+    // Draw Curve
 	gpuGeom.setVerts(bsplineGeom.verts);
 	gpuGeom.setCols(bsplineGeom.cols);
     gpuGeom.setNormals(bsplineGeom.verts);
 	gpuGeom.bind();
 	glDrawArrays(GL_LINE_STRIP, 0, GLsizei(bsplineGeom.verts.size()));
+
+    // Draw Control Points
+    /*
+    gpuGeom.setVerts(controlPoints);
+    glPointSize(5.f);
+    glDrawArrays(GL_POINTS,0,controlPoints.size());
+    */
 
 }
 
@@ -54,7 +61,6 @@ int Bspline::delta(float u, int k, int m, std::vector<float>& knotSequence) {
 			return i;
 		}
 	}
-	// std::cout << "invalid value for u = " << u << std::endl;
 	return -1;
 }
 
@@ -62,7 +68,6 @@ glm::vec3 Bspline::E_delta_1(float u, int k, int m, std::vector<float>& knotSequ
 	int d = delta(u, k, m, knotSequence);
 	std::vector<glm::vec3> nonZeroControlPoints;
 	for (int i = 0; i < k; i++) {
-		// std::cout << " d - 1 = " << d - 1 << std::endl;
 		nonZeroControlPoints.push_back(controlPoints.at(d - i));
 	}
 	for (int r = k; r >= 2; r--) {
@@ -85,11 +90,10 @@ std::vector<float> Bspline::computeStandardKnotSequence(int k, int m) {
 		U.push_back(0);
 	}
 	for (int j = 0; j < knots; j++) {
-		//U.push_back(U.back() + 1);
         auto step = (j+1)*(1.f/(m-k+2));
         U.push_back(step);
 	}
-	//int finalPadding = U.back() + 1;
+
 	for (int i = 0; i < k; i++) {
 		U.push_back(1);
 	}

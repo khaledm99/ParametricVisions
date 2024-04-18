@@ -48,7 +48,6 @@ void CoonsPatch::build()
     float scale = 1.f;
     for(auto& p : p0.controlPoints)
     {
-        //p = glm::vec3(glm::translate(glm::scale(glm::mat4(1.f), glm::vec3(scale*2)), glm::vec3(0.f,0.f,scale)) * glm::vec4(p,1.f));
         auto scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale));
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,scale));
         p = glm::vec3( translate * scaleM * glm::vec4(p,1.f));
@@ -56,14 +55,12 @@ void CoonsPatch::build()
 
     for(auto& p : p1.controlPoints)
     {
-        //p = glm::vec3(glm::translate(glm::scale(glm::mat4(1.f), glm::vec3(scale*2)), glm::vec3(0.f,0.f,-scale)) * glm::vec4(p,1.f));
         auto scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale));
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,-scale));
         p = glm::vec3( translate * scaleM * glm::vec4(p,1.f));
     }
     for(auto& p : q0.controlPoints)
     {
-        //p = glm::vec3(glm::translate(glm::scale(glm::rotate(glm::mat4(1.f),glm::radians(90.f), glm::vec3(0.f,1.f,0.f)), glm::vec3(scale*2)), glm::vec3(0.f,0.f,-scale)) * glm::vec4(p,1.f));
         auto rotate =  glm::rotate(glm::mat4(1.f),glm::radians(90.f), glm::vec3(0.f,1.f,0.f));
         auto scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale));
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(-scale,0.f,0.f));
@@ -71,7 +68,6 @@ void CoonsPatch::build()
     }
     for(auto& p : q1.controlPoints)
     {
-        //p = glm::vec3(glm::translate(glm::scale(glm::rotate(glm::mat4(1.f),glm::radians(90.f), glm::vec3(0.f,1.f,0.f)), glm::vec3(scale*2)), glm::vec3(0.f,0.f,scale)) * glm::vec4(p,1.f));
         auto rotate =  glm::rotate(glm::mat4(1.f),glm::radians(90.f), glm::vec3(0.f,1.f,0.f));
         auto scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale));
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(scale,0.f,0.f));
@@ -79,17 +75,6 @@ void CoonsPatch::build()
     }
 
 
-    
-    /*
-    printf("p0: %f,%f,%f\n", p0.controlPoints[0].x,p0.controlPoints[0].y,p0.controlPoints[0].z);
-    printf("%f,%f,%f\n", p0.controlPoints.back().x,p0.controlPoints.back().y,p0.controlPoints.back().z);
-    printf("p1: %f,%f,%f\n", p1.controlPoints[0].x,p1.controlPoints[0].y,p1.controlPoints[0].z);
-    printf("%f,%f,%f\n", p1.controlPoints.back().x,p1.controlPoints.back().y,p1.controlPoints.back().z);
-    printf("q0: %f,%f,%f\n", q0.controlPoints[0].x,q0.controlPoints[0].y,q0.controlPoints[0].z);
-    printf("%f,%f,%f\n", q0.controlPoints.back().x,q0.controlPoints.back().y,q0.controlPoints.back().z);
-    printf("q1: %f,%f,%f\n", q1.controlPoints[0].x,q1.controlPoints[0].y,q1.controlPoints[0].z);
-    printf("%f,%f,%f\n", q1.controlPoints.back().x,q1.controlPoints[0].y,q1.controlPoints.back().z);
-    */
     if(glm::length(p0.controlPoints[0] - q0.controlPoints[0]) > 0.0001f) 
     {
         auto mid = (p0.controlPoints[0] + q0.controlPoints[0])/2.f;
@@ -113,7 +98,6 @@ void CoonsPatch::build()
 
     if(glm::length(p1.controlPoints.back() - q1.controlPoints.back()) > 0.0001f) 
     {
-        std::cout<<"error"<<std::endl;
         auto mid = (p1.controlPoints.back() + q1.controlPoints.back())/2.f;
         p1.controlPoints.back() = mid;
         q1.controlPoints.back() = mid;
@@ -150,19 +134,11 @@ void CoonsPatch::build()
     {
         for(float v=0.f;v<=1.f; v+= increment_v)
         {
-            //surfaceGeom.verts.push_back(surface(u,v));
             auto r0 = s0.surface(u,v);
             auto r1 = s1.surface(v,u);
             auto b = bp.surface(u,v);
             auto mid = r0+r1;
             auto c = r0+r1-b;
-            if(false)
-            {
-            printf("r0: %f,%f,%f\n", r0.x,r0.y,r0.z);
-            printf("r1: %f,%f,%f\n", r1.x,r1.y,r1.z);
-            printf("b: %f,%f,%f\n", b.x,b.y,b.z);
-            printf("c: %f,%f,%f\n", c.x,c.y,c.z);
-            }
 
             switch(step)
             {
@@ -230,10 +206,6 @@ void CoonsPatch::draw() {
 	gpuGeom.bind();
 
 	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
-    
-    
-    //bp.draw();
-
 }
 void CoonsPatch::drawCurves()
 {

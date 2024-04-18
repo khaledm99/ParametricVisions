@@ -32,7 +32,6 @@ int FreeformSurface::build() {
 	float increment_v = 0.05 * range_v;
 	float increment_u = 0.1 * range_u;
 
-	std::cout << range_u << " " << range_v << std::endl;
 	float v;
 
 	int height = 0;

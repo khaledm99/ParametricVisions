@@ -105,7 +105,6 @@ void BilinearPatch::draw() {
 
 	gpuGeom.bind();
 
-	//glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
 	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
 
 }
