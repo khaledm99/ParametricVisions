@@ -53,7 +53,6 @@ void CoonsPatch::build()
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,scale));
         p = glm::vec3( translate * scaleM * glm::vec4(p,1.f));
     }
-    p0.build();
 
     for(auto& p : p1.controlPoints)
     {
@@ -62,7 +61,6 @@ void CoonsPatch::build()
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,-scale));
         p = glm::vec3( translate * scaleM * glm::vec4(p,1.f));
     }
-    p1.build();
     for(auto& p : q0.controlPoints)
     {
         //p = glm::vec3(glm::translate(glm::scale(glm::rotate(glm::mat4(1.f),glm::radians(90.f), glm::vec3(0.f,1.f,0.f)), glm::vec3(scale*2)), glm::vec3(0.f,0.f,-scale)) * glm::vec4(p,1.f));
@@ -71,7 +69,6 @@ void CoonsPatch::build()
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(-scale,0.f,0.f));
         p = glm::vec3( translate * rotate * scaleM * glm::vec4(p,1.f));
     }
-    q0.build();
     for(auto& p : q1.controlPoints)
     {
         //p = glm::vec3(glm::translate(glm::scale(glm::rotate(glm::mat4(1.f),glm::radians(90.f), glm::vec3(0.f,1.f,0.f)), glm::vec3(scale*2)), glm::vec3(0.f,0.f,scale)) * glm::vec4(p,1.f));
@@ -80,15 +77,8 @@ void CoonsPatch::build()
         auto translate = glm::translate(glm::mat4(1.f), glm::vec3(scale,0.f,0.f));
         p = glm::vec3( translate * rotate * scaleM * glm::vec4(p,1.f));
     }
-    q1.build();
 
 
-    s0 = RuledSurface(p0,p1);
-    s1 = RuledSurface(q0,q1);
-    s0.transform = false;
-    s1.transform = false;
-    s0.build();
-    s1.build();
     
     /*
     printf("p0: %f,%f,%f\n", p0.controlPoints[0].x,p0.controlPoints[0].y,p0.controlPoints[0].z);
@@ -100,16 +90,49 @@ void CoonsPatch::build()
     printf("q1: %f,%f,%f\n", q1.controlPoints[0].x,q1.controlPoints[0].y,q1.controlPoints[0].z);
     printf("%f,%f,%f\n", q1.controlPoints.back().x,q1.controlPoints[0].y,q1.controlPoints.back().z);
     */
+    if(glm::length(p0.controlPoints[0] - q0.controlPoints[0]) > 0.0001f) 
+    {
+        auto mid = (p0.controlPoints[0] + q0.controlPoints[0])/2.f;
+        p0.controlPoints[0] = mid;
+        q0.controlPoints[0] = mid;
+    }
+
+    if(glm::length(p0.controlPoints.back() - q1.controlPoints[0]) > 0.0001f) 
+    {
+        auto mid = (p0.controlPoints.back() + q1.controlPoints[0])/2.f;
+        p0.controlPoints.back() = mid;
+        q1.controlPoints[0] = mid;
+    }
+
+    if(glm::length(q0.controlPoints.back() - p1.controlPoints[0]) > 0.0001f) 
+    {
+        auto mid = (q0.controlPoints.back() + p1.controlPoints[0])/2.f;
+        q0.controlPoints.back() = mid;
+        p1.controlPoints[0] = mid;
+    }
+
+    if(glm::length(p1.controlPoints.back() - q1.controlPoints.back()) > 0.0001f) 
+    {
+        std::cout<<"error"<<std::endl;
+        auto mid = (p1.controlPoints.back() + q1.controlPoints.back())/2.f;
+        p1.controlPoints.back() = mid;
+        q1.controlPoints.back() = mid;
+    }
+
+    p0.build();
+    p1.build();
+    q0.build();
+    q1.build();
+    s0 = RuledSurface(p0,p1);
+    s1 = RuledSurface(q0,q1);
+    s0.transform = false;
+    s1.transform = false;
+    s0.build();
+    s1.build();
     p00 = p0.controlPoints[0];
-    //if(p00 != q0.controlPoints[0]) std::cout<<"error in p00"<<std::endl;
-    //printf("%f,%f,%f\n", p0.controlPoints[0].x,p0.controlPoints[0].y,p0.controlPoints[0].z);
-    //printf("%f,%f,%f\n", q0.controlPoints[0].x,q0.controlPoints[0].y,q0.controlPoints[0].z);
     p01 = p0.controlPoints.back();
-    //if(p01 != q1.controlPoints[0]) std::cout<<"error in p01"<<std::endl;
     p10 = q0.controlPoints.back();
-    //if(p10 != p1.controlPoints[0]) std::cout<<"error in p10"<<std::endl;
     p11 = p1.controlPoints.back();
-    //if(p11 != q1.controlPoints.back()) std::cout<<"error in p11"<<std::endl;
     bp = BilinearPatch(p00,p01,p10,p11);
     bp.build();
 

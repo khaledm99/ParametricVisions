@@ -465,6 +465,7 @@ float vertices[] = {
         change |= ui.beginMainWindow();
         change |= ui.showConfig();
         change |= ui.showViewport(fb.getTextureBuffer());
+        change |= ui.showCurvePanel();
         ui.endMainWindowAndRender();
         
         ui.render();

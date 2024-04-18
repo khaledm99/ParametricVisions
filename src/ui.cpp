@@ -131,8 +131,8 @@ bool UI::showConfig()
     change |= ImGui::RadioButton("Orthographic", &perspective, 1);
     ImGui::Separator();
     change |= ImGui::DragFloat("View Distance", &viewDistance, 0.1f);
-    change |= ImGui::DragFloat("Azimuth", &pitch, 0.1f);
-    change |= ImGui::DragFloat("Polar", &yaw, 0.1f);
+    change |= ImGui::DragFloat("Azimuth", &pitch, 0.2f);
+    change |= ImGui::DragFloat("Polar", &yaw, 0.2f);
 
     ImGui::Separator();
     // Adapted from Online ImGui Manual
@@ -141,7 +141,6 @@ bool UI::showConfig()
     // stored in the object itself, etc.)
     const char* items[] = {"None"
                           ,"Ruled"
-                          ,"Bilinear"
                           ,"Coons"
                           ,"Rotational Blend"
                           ,"Revolution"};
@@ -210,7 +209,6 @@ bool UI::showConfig()
                         {
                             curve_b = n;
                             returnedCurves[1] = n;
-                            std::cout<<"setting curve b"<<std::endl;
                         }
                             
 
@@ -446,6 +444,162 @@ bool UI::showViewport(unsigned int texColBuf)
     viewportSize = ImGui::GetContentRegionAvail();
     ImGui::Image((ImTextureID)texColBuf, viewportSize, ImVec2(0.f,1.f), ImVec2(1.f,0.f)); 
     ImGui::End();
+    return change;
+}
+bool UI::showCurvePanel()
+{
+    bool change = false;
+    ImGui::Begin("Curves");
+
+    static ImVector<ImVec2> points;
+    static std::vector<glm::vec3> cps;
+    static ImVec2 scrolling(0.0f, 0.0f);
+    static bool opt_enable_grid = true;
+    static bool opt_enable_context_menu = true;
+    static bool adding_line = false;
+
+    ImGui::Checkbox("Enable grid", &opt_enable_grid);
+    ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
+    ImGui::Text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.");
+    //static Bspline* spline = NULL;
+
+    
+    if(ImGui::Button("Save Curve"))
+    {
+        if(spline.controlPoints.size()>4) 
+        {
+            curves.push_back(spline);
+            spline = Bspline();
+            cps.clear();
+            points.clear();
+
+        }
+        
+        else ImGui::Text("No curve to save!");
+    }
+    
+    // Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
+    // Here we demonstrate that this can be replaced by simple offsetting + custom drawing + PushClipRect/PopClipRect() calls.
+    // To use a child window instead we could use, e.g:
+    //      ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));      // Disable padding
+    //      ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 50, 255));  // Set a background color
+    //      ImGui::BeginChild("canvas", ImVec2(0.0f, 0.0f), ImGuiChildFlags_Border, ImGuiWindowFlags_NoMove);
+    //      ImGui::PopStyleColor();
+    //      ImGui::PopStyleVar();
+    //      [...]
+    //      ImGui::EndChild();
+
+    // Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
+    ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
+    ImVec2 canvas_sz = ImGui::GetContentRegionAvail();   // Resize canvas to what's available
+    if (canvas_sz.x < 50.0f) canvas_sz.x = 50.0f;
+    if (canvas_sz.y < 50.0f) canvas_sz.y = 50.0f;
+    ImVec2 canvas_p1 = ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.x);
+
+    // Draw border and background color
+    ImGuiIO& io = ImGui::GetIO();
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
+    draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255));
+
+    // This will catch our interactions
+    ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
+    const bool is_hovered = ImGui::IsItemHovered(); // Hovered
+    const bool is_active = ImGui::IsItemActive();   // Held
+    const ImVec2 origin(canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y); // Lock scrolled origin
+    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
+
+    // Add first and second point
+    if (is_hovered &&  ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+    {
+        //points.push_back(mouse_pos_in_canvas);
+        auto normx = ((mouse_pos_in_canvas.x - 0.f)/(canvas_sz.x - 0.f) ) * (1.f - (-1.f)) + -1.f;
+        auto normy = ((mouse_pos_in_canvas.y - 0.f)/(canvas_sz.x - 0.f) ) * (1.f - (-1.f)) + -1.f;
+        points.push_back(ImVec2(normx,normy));
+        cps.push_back(glm::vec3(normx,normy,0.f));
+        std::cout<<"pushed"<<std::endl;
+        //points.push_back(mouse_pos_in_canvas);
+        //adding_line = true;
+    }
+    /*
+    if (adding_line)
+    {
+        points.back() = mouse_pos_in_canvas;
+        if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
+            adding_line = false;
+    }
+    */
+
+    // Pan (we use a zero mouse threshold when there's no context menu)
+    // You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
+    /*
+    const float mouse_threshold_for_pan = opt_enable_context_menu ? -1.0f : 0.0f;
+    if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan))
+    {
+        scrolling.x += io.MouseDelta.x;
+        scrolling.y += io.MouseDelta.y;
+    }
+    */
+
+    // Context menu (under default mouse threshold)
+    /*
+    ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
+    if (opt_enable_context_menu && drag_delta.x == 0.0f && drag_delta.y == 0.0f)
+        ImGui::OpenPopupOnItemClick("context", ImGuiPopupFlags_MouseButtonRight);
+    if (ImGui::BeginPopup("context"))
+    {
+        if (adding_line)
+            points.resize(points.size() - 2);
+        adding_line = false;
+        if (ImGui::MenuItem("Remove one", NULL, false, points.Size > 0)) { points.resize(points.size() - 2); }
+        if (ImGui::MenuItem("Remove all", NULL, false, points.Size > 0)) { points.clear(); }
+        ImGui::EndPopup();
+    }
+    */
+
+    // Draw grid 
+    draw_list->PushClipRect(canvas_p0, canvas_p1, true);
+    if (opt_enable_grid)
+    {
+        const float GRID_STEP = 64.0f;
+        for (float x = 0.f; x < canvas_sz.x; x += GRID_STEP)
+            draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40));
+        for (float y = 0.f; y < canvas_sz.y; y += GRID_STEP)
+            draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), IM_COL32(200, 200, 200, 40));
+    }
+
+    // Draw points + curve
+    for (int n = 0; n < points.Size; n ++)
+    {
+        //draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
+        auto scalex = ((points[n].x - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+        auto scaley = ((points[n].y - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+        draw_list->AddCircle( ImVec2(origin.x + scalex, origin.y + scaley), 2.f,IM_COL32(255, 255, 0, 255) ,32.f, 0.2f);
+    }
+    
+    if(cps.size()>4)
+    {
+        spline = Bspline(cps,3);
+        spline.build();
+
+        float step = 0.001;
+        for (float u = 0.f; u < 1.f-step; u +=step)
+        {
+            //draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
+            auto point1 = spline.curve(u);
+            auto scalex1 = ((point1.x - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+            auto scaley1 = ((point1.y - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+            auto point2 = spline.curve(u+step);
+            auto scalex2 = ((point2.x - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+            auto scaley2 = ((point2.y - -1.f)/(1.f - -1.f) ) * (canvas_sz.x - 0.f) + 0.f;
+            draw_list->AddLine(ImVec2(origin.x + scalex1, origin.y + scaley1), ImVec2(origin.x + scalex2, origin.y + scaley2), IM_COL32(255, 255, 0, 255), 2.0f);
+        }
+    }
+
+
+    draw_list->PopClipRect();
+
+        ImGui::End();
     return change;
 }
 void UI::render()

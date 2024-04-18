@@ -26,8 +26,6 @@ int Bspline::build() {
         bsplineGeom.verts.push_back(curve(u));
 		bsplineGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
 	}
-	gpuGeom.setVerts(bsplineGeom.verts);
-	gpuGeom.setCols(bsplineGeom.cols);
 
 	return 0;
 }
@@ -41,6 +39,9 @@ glm::vec3 Bspline::curve(float u){
 
 // bpsline needs to be built before drawn
 void Bspline::draw() {
+	gpuGeom.setVerts(bsplineGeom.verts);
+	gpuGeom.setCols(bsplineGeom.cols);
+    gpuGeom.setNormals(bsplineGeom.verts);
 	gpuGeom.bind();
 	glDrawArrays(GL_LINE_STRIP, 0, GLsizei(bsplineGeom.verts.size()));
 

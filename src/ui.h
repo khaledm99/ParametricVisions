@@ -7,7 +7,6 @@
 
 enum Surface {NONE = 0
              ,RULED
-             ,BILINEAR
              ,COONS
              ,ROTATIONAL
              ,REVOLUTION
@@ -20,6 +19,7 @@ class UI {
 
     public:
 
+        Bspline spline;
         std::vector<Bspline> curves;
         std::vector<int> returnedCurves;
         bool wire = false;
@@ -37,6 +37,7 @@ class UI {
         bool beginMainWindow();
         void endMainWindowAndRender();
         bool showConfig();
+        bool showCurvePanel();
         bool showViewport(unsigned int texColBuf);
         void render();
         ImVec2 getViewportSize();
