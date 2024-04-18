@@ -31,6 +31,7 @@ RevolutionSurface& RevolutionSurface::operator=(const RevolutionSurface& other) 
 }
 
 void RevolutionSurface::build() {
+    curve.build();
 	CPU_Geometry curveGeom = curve.getGeom();
 
 	surfaceGeom.cols.clear();
@@ -116,4 +117,7 @@ void RevolutionSurface::draw() {
 	*/
 
 
+}
+void RevolutionSurface::drawCurves() {
+    curve.draw();    
 }

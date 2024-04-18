@@ -7,6 +7,7 @@
 
 class RotationalBlendSurface {
 public:
+    RotationalBlendSurface(){};
 	RotationalBlendSurface(std::vector<glm::vec3> controlPoints1, std::vector<glm::vec3> controlPoints2);
 	RotationalBlendSurface(Bspline& curve1, Bspline& curve2);
 
@@ -24,8 +25,11 @@ public:
 		}
 		return *this;
 	}
+	Bspline curve1;
+	Bspline curve2;
 	int build();
 	void draw();
+    void drawCurves();
 	void drawMidline();
 
 	std::vector<glm::vec3>& getControlPoints1() { return controlPoints1; }
@@ -34,8 +38,6 @@ private:
 	std::vector<glm::vec3> controlPoints1;
 	std::vector<glm::vec3> controlPoints2;
 
-	Bspline curve1;
-	Bspline curve2;
 
 	CPU_Geometry_Index surfaceGeom;
 	GPU_Geometry_Index gpuGeom;

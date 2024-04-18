@@ -4,11 +4,11 @@
 
 class RuledSurface {
     public:
+        bool transform = true;
         Bspline curve_a;
         Bspline curve_b;
         CPU_Geometry_Index surfaceGeom;
         GPU_Geometry_Index gpuGeom;
-    public:
         RuledSurface(){};
         RuledSurface(Bspline& curve_a, Bspline& curve_b);
         RuledSurface(const RuledSurface& other);
@@ -16,4 +16,5 @@ class RuledSurface {
         glm::vec3 surface(float u, float v);
         void build();
         void draw();
+        void drawCurves();
 };

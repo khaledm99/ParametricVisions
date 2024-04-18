@@ -26,6 +26,11 @@ int RotationalBlendSurface::build() {
 	int rotationalIncAngle = 8;
 	int totalRotation = 360;
 
+	surfaceGeom.cols.clear();
+	surfaceGeom.verts.clear();
+	surfaceGeom.normals.clear();
+	surfaceGeom.indices.clear();
+
 	curve1.build();
 	curve2.build();
 
@@ -90,7 +95,6 @@ int RotationalBlendSurface::build() {
 
 
 
-	std::cout << surfaceGeom.verts.size() << std::endl;
 
 	return 0;
 }
@@ -117,4 +121,9 @@ void RotationalBlendSurface::drawMidline() {
 	gpu_midline.bind();
 	glDrawArrays(GL_LINE_STRIP, 0, (GLsizei)midline.verts.size());
 
+}
+void RotationalBlendSurface::drawCurves()
+{
+    curve1.draw();
+    curve2.draw();
 }

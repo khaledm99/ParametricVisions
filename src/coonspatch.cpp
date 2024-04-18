@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cstdio>
 
+
 CoonsPatch::CoonsPatch(Bspline p0,Bspline p1,Bspline q0,Bspline q1)
     : p0(p0)
     , p1(p1)
@@ -44,7 +45,7 @@ void CoonsPatch::build()
 	surfaceGeom.normals.clear();
 	surfaceGeom.indices.clear();
 
-    float scale = 2.f;
+    float scale = 1.f;
     for(auto& p : p0.controlPoints)
     {
         //p = glm::vec3(glm::translate(glm::scale(glm::mat4(1.f), glm::vec3(scale*2)), glm::vec3(0.f,0.f,scale)) * glm::vec4(p,1.f));
@@ -84,6 +85,8 @@ void CoonsPatch::build()
 
     s0 = RuledSurface(p0,p1);
     s1 = RuledSurface(q0,q1);
+    s0.transform = false;
+    s1.transform = false;
     s0.build();
     s1.build();
     
@@ -128,6 +131,7 @@ void CoonsPatch::build()
             auto r0 = s0.surface(u,v);
             auto r1 = s1.surface(v,u);
             auto b = bp.surface(u,v);
+            auto mid = r0+r1;
             auto c = r0+r1-b;
             if(false)
             {
@@ -137,7 +141,24 @@ void CoonsPatch::build()
             printf("c: %f,%f,%f\n", c.x,c.y,c.z);
             }
 
-            surfaceGeom.verts.push_back(c);
+            switch(step)
+            {
+                case 0:
+                    surfaceGeom.verts.push_back(r0);
+                    break;
+                case 1:
+                    surfaceGeom.verts.push_back(r1);
+                    break;
+                case 2:
+                    surfaceGeom.verts.push_back(b);
+                    break;
+                case 3:
+                    surfaceGeom.verts.push_back(mid);
+                    break;
+                case 4:
+                    surfaceGeom.verts.push_back(c);
+                    break;
+            }
 			surfaceGeom.cols.push_back(glm::vec3(color[0], color[1], color[2]));
 
         }
@@ -188,10 +209,13 @@ void CoonsPatch::draw() {
 	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
     
     
+    //bp.draw();
+
+}
+void CoonsPatch::drawCurves()
+{
     p0.draw();
     p1.draw();
     q0.draw();
     q1.draw();
-    //bp.draw();
-
 }

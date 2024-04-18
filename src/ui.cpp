@@ -1,5 +1,7 @@
 #include "ui.h"
 #include "imgui_internal.h"
+#include <string>
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 void UI::setWindow(GLFWwindow* w)
@@ -17,6 +19,7 @@ void UI::initImGui()
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init();
+    returnedCurves.resize(4);
 }
 
 bool UI::beginMainWindow()
@@ -82,31 +85,6 @@ bool UI::beginMainWindow()
     
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
-        /*
-        if(firstLoop)
-        {
-            ImVec2 workPos = ImGui::GetMainViewport()->WorkPos;
-            ImVec2 workSize = ImGui::GetMainViewport()->WorkSize;
-            ImVec2 workCenter{workPos.x + workSize.x * 0.5f, workPos.y+workSize.y*0.5f};
-            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGuiID root_id = ImGui::GetID("Root");
-            ImGui::DockBuilderRemoveNode(dockspace_id);
-            ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags);
-            int w, h;
-            glfwGetWindowSize(window, &w, &h);
-            ImVec2 size{w,h};
-            ImVec2 nodePos{workCenter.x - size.x * 0.5f, workCenter.y - size.y * 0.5f};
-            ImGui::DockBuilderSetNodeSize(dockspace_id,size);
-            ImGui::DockBuilderSetNodePos(dockspace_id, nodePos);
-            ImGuiID dock1 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left,0.5f,nullptr,&dockspace_id);
-            ImGuiID dock2 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right,0.5f,nullptr,&dockspace_id);
-            ImGuiID dock3 = ImGui::DockBuilderSplitNode(dock2, ImGuiDir_Down,0.5f,nullptr,&dock2);
-            ImGui::DockBuilderDockWindow("One", dock1);
-            ImGui::DockBuilderDockWindow("Two", dock2);
-            ImGui::DockBuilderDockWindow("Three", dock3);
-            ImGui::DockBuilderFinish(dockspace_id);
-        }
-        */
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
@@ -134,7 +112,6 @@ bool UI::beginMainWindow()
 
         ImGui::EndMenuBar();
     }
-    //if(firstLoop) firstLoop = false;
     return change;
 
 }
@@ -148,14 +125,290 @@ bool UI::showConfig()
     
     ImGui::Begin("Config");
     change |= ImGui::Checkbox("Toggle Wireframe", &wire);
+    change |= ImGui::Checkbox("Show Surface", &showSurface);
+    change |= ImGui::Checkbox("Show Curves", &showCurves);
     change |= ImGui::RadioButton("Perspective", &perspective, 0); ImGui::SameLine();
     change |= ImGui::RadioButton("Orthographic", &perspective, 1);
     ImGui::Separator();
     change |= ImGui::DragFloat("View Distance", &viewDistance, 0.1f);
     change |= ImGui::DragFloat("Azimuth", &pitch, 0.1f);
     change |= ImGui::DragFloat("Polar", &yaw, 0.1f);
-    //change |= ImGui::SliderAngle("Camera Pitch", &pitch, 0, 360.f,"%.2f",0);
-    //change |= ImGui::SliderAngle("Camera Yaw", &yaw, 0, 360.f,"%.2f",0);
+
+    ImGui::Separator();
+    // Adapted from Online ImGui Manual
+    // Using the generic BeginCombo() API, you have full control over how to display the combo contents.
+    // (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
+    // stored in the object itself, etc.)
+    const char* items[] = {"None"
+                          ,"Ruled"
+                          ,"Bilinear"
+                          ,"Coons"
+                          ,"Rotational Blend"
+                          ,"Revolution"};
+
+    static int item_current_idx = 0; // Here we store our selection data as an index.
+    const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+    if (ImGui::BeginCombo("Select Surface", combo_preview_value, 0))
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+        {
+            const bool is_selected = (item_current_idx == n);
+            if (ImGui::Selectable(items[n], is_selected))
+            {
+                item_current_idx = n;
+                surfaceType = (Surface)n;
+            }
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+    build = false;
+    if (ImGui::Button("Build")) build = true;
+    ImGui::Separator();
+
+    static Surface st = NONE;
+    switch(surfaceType) 
+    {
+        case RULED:
+        {
+            static int curve_a = 0; 
+            const char* combo_preview_value = std::to_string(curve_a).c_str();
+            if (ImGui::BeginCombo("Select Curve 1", combo_preview_value, 0))
+            {
+                if(curves.size()>0)
+                {
+                    for (int n = 0; n < curves.size(); n++)
+                    {
+                        const bool is_selected = (curve_a == n);
+                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        {
+                            curve_a = n;
+                            returnedCurves[0] = n;
+                        }
+                            
+
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+
+
+            }
+            static int curve_b = 0; 
+            combo_preview_value = std::to_string(curve_b).c_str();
+            if (ImGui::BeginCombo("Select Curve 2", combo_preview_value, 0))
+            {
+                if(curves.size()>0)
+                {
+                    for (int n = 0; n < curves.size(); n++)
+                    {
+                        const bool is_selected = (curve_b == n);
+                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        {
+                            curve_b = n;
+                            returnedCurves[1] = n;
+                            std::cout<<"setting curve b"<<std::endl;
+                        }
+                            
+
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+        }
+
+            break;
+        case COONS:
+            {
+                static int p0 = 0; 
+                const char* combo_preview_value = std::to_string(p0).c_str();
+                if (ImGui::BeginCombo("Select P0", combo_preview_value, 0))
+                {
+                    if(curves.size()>0)
+                    {
+                        for (int n = 0; n < curves.size(); n++)
+                        {
+                            const bool is_selected = (p0 == n);
+                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            {
+                                p0 = n;
+                                returnedCurves[0] = n;
+                            }
+                                
+
+                            if (is_selected)
+                                ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+
+
+                }
+                static int p1 = 0; 
+                combo_preview_value = std::to_string(p1).c_str();
+                if (ImGui::BeginCombo("Select P1", combo_preview_value, 0))
+                {
+                    if(curves.size()>0)
+                    {
+                        for (int n = 0; n < curves.size(); n++)
+                        {
+                            const bool is_selected = (p1 == n);
+                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            {
+                                p1 = n;
+                                returnedCurves[1] = n;
+                            }
+                                
+
+                            if (is_selected)
+                                ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+                static int q0 = 0; 
+                combo_preview_value = std::to_string(q0).c_str();
+                if (ImGui::BeginCombo("Select Q0", combo_preview_value, 0))
+                {
+                    if(curves.size()>0)
+                    {
+                        for (int n = 0; n < curves.size(); n++)
+                        {
+                            const bool is_selected = (q0 == n);
+                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            {
+                                q0 = n;
+                                returnedCurves[2] = n;
+                            }
+                                
+
+                            if (is_selected)
+                                ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+
+
+                }
+                static int q1 = 0; 
+                combo_preview_value = std::to_string(q1).c_str();
+                if (ImGui::BeginCombo("Select Q1", combo_preview_value, 0))
+                {
+                    if(curves.size()>0)
+                    {
+                        for (int n = 0; n < curves.size(); n++)
+                        {
+                            const bool is_selected = (q1 == n);
+                            if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                            {
+                                q1 = n;
+                                returnedCurves[3] = n;
+                            }
+                                
+
+                            if (is_selected)
+                                ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                build |= ImGui::RadioButton("Ruled Surface 1", &coonsStep, 0); 
+                build |= ImGui::RadioButton("Ruled Surface 2", &coonsStep, 1); 
+                build |= ImGui::RadioButton("Bilinear Patch", &coonsStep, 2);
+                build |= ImGui::RadioButton("R1 + R2", &coonsStep, 3);
+                build |= ImGui::RadioButton("Coons Patch (R1 + R2 - B)", &coonsStep, 4);
+            }
+            break;
+        case ROTATIONAL:
+            {
+            static int curve_a = 0; 
+            const char* combo_preview_value = std::to_string(curve_a).c_str();
+            if (ImGui::BeginCombo("Select Curve 1", combo_preview_value, 0))
+            {
+                if(curves.size()>0)
+                {
+                    for (int n = 0; n < curves.size(); n++)
+                    {
+                        const bool is_selected = (curve_a == n);
+                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        {
+                            curve_a = n;
+                            returnedCurves[0] = n;
+                        }
+                            
+
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+
+
+            }
+            static int curve_b = 0; 
+            combo_preview_value = std::to_string(curve_b).c_str();
+            if (ImGui::BeginCombo("Select Curve 2", combo_preview_value, 0))
+            {
+                if(curves.size()>0)
+                {
+                    for (int n = 0; n < curves.size(); n++)
+                    {
+                        const bool is_selected = (curve_b == n);
+                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        {
+                            curve_b = n;
+                            returnedCurves[1] = n;
+                        }
+                            
+
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            }
+            break;
+        case REVOLUTION:
+            {
+            static int curve_a = 0; 
+            const char* combo_preview_value = std::to_string(curve_a).c_str();
+            if (ImGui::BeginCombo("Select Curve 1", combo_preview_value, 0))
+            {
+                if(curves.size()>0)
+                {
+                    for (int n = 0; n < curves.size(); n++)
+                    {
+                        const bool is_selected = (curve_a == n);
+                        if (ImGui::Selectable(std::to_string(n).c_str(), is_selected))
+                        {
+                            curve_a = n;
+                            returnedCurves[0] = n;
+                        }
+                            
+
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+
+
+            }
+            
+        }
+            break;
+        case NONE:
+        default:
+            break;
+    }
+
     // Change view direction. Button loop adapted from interactive ImGui Demo
     for(int i =0; i<4;i++)
     {

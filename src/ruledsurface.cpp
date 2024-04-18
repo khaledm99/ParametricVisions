@@ -33,20 +33,46 @@ glm::vec3 RuledSurface::surface(float u, float v)
 }
 void RuledSurface::build()
 {
+	surfaceGeom.cols.clear();
+	surfaceGeom.verts.clear();
+	surfaceGeom.normals.clear();
+	surfaceGeom.indices.clear();
+
+
+    
+    if(transform)
+    {
+        float scale = 1.f;
+        for(auto& p : curve_a.controlPoints)
+        {
+            auto scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale));
+            auto translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,scale));
+            p = glm::vec3( translate * scaleM * glm::vec4(p,1.f));
+        }
+
+        for(auto& p : curve_b.controlPoints)
+        {
+            auto scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale));
+            auto translate = glm::translate(glm::mat4(1.f), glm::vec3(0.f,0.f,-scale));
+            p = glm::vec3( translate * scaleM * glm::vec4(p,1.f));
+        }
+    }
+    
+
+
+
     curve_a.build();
     curve_b.build();
     CPU_Geometry curveGeomA = curve_a.getGeom();
     CPU_Geometry curveGeomB = curve_b.getGeom();
+    /*
     if(curveGeomA.verts.size() != curveGeomB.verts.size())
     {
         std::cout<<"spline sizes don't match"<<std::endl;
         return;
     }
+    */
 
-	surfaceGeom.cols.clear();
-	surfaceGeom.verts.clear();
-	surfaceGeom.normals.clear();
-	surfaceGeom.indices.clear();
 
     float color[3] = { 1.f, 0.f, 0.f }; // Color of new points
 
@@ -133,4 +159,9 @@ void RuledSurface::draw() {
 	//glDrawArrays(GL_POINTS, 0, (GLsizei)surfaceGeom.verts.size());
 	glDrawElements(GL_TRIANGLES, surfaceGeom.indices.size(), GL_UNSIGNED_INT, 0);
 
+}
+void RuledSurface::drawCurves()
+{
+    curve_a.draw();
+    curve_b.draw();
 }

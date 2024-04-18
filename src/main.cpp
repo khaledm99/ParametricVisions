@@ -53,6 +53,7 @@ void mouseCallback(GLFWwindow *window, int button, int action, int mods)
         double curr_x = 0, curr_y = 0;
  
         glfwGetCursorPos(window, &curr_x, &curr_y);
+        std::cout<<curr_x<<","<<curr_y<<std::endl;
  
         // last is a global vec3 variable
         //last = vec3(curr_x, curr_y, -1);
@@ -270,6 +271,16 @@ float vertices[] = {
     vs.x = VPWIDTH;
     vs.y = VPHEIGHT;
     Camera cam;
+
+    ui.curves.push_back(Bspline({glm::vec3(-1.f,-1.f,0.f),glm::vec3(0.f,1.f,0.f),glm::vec3(1.f,0.f,0.f)}, 3));
+    ui.curves.push_back(Bspline({glm::vec3(-1.f,0.f,0.f),glm::vec3(0.f,-1.f,0.f),glm::vec3(1.f,1.f,0.f)}, 3));
+    ui.curves.push_back(Bspline({ glm::vec3(-0.9f,-0.7f, -0.3f), glm::vec3(-0.6f,-0.4f,- 0.3f), glm::vec3(-0.5f,0.4f, -0.3f), glm::vec3(-1.0f,0.7f, -0.3f) },3));
+
+    Surface selected = NONE;
+    RuledSurface ruled;
+    CoonsPatch coons;
+    RevolutionSurface revolution;
+    RotationalBlendSurface rotational;
     while(!glfwWindowShouldClose(window))
     {
         
@@ -325,7 +336,7 @@ float vertices[] = {
         //ruled.draw();
 
         //bp.draw();
-        c.draw();
+        //c.draw();
 
         //rlcp1.draw();
         //rlcp2.draw();
@@ -340,31 +351,86 @@ float vertices[] = {
         //q0.draw();
         //q1.draw();
 
-
-        /*
-        std::vector<float> sphereverts;
-        float R = 2.f;
-        float step = 0.01;
-        for(float u=0.f; u<3.14f; u+=step)
+        switch(ui.surfaceType)
         {
-            for(float v=0.f; v<3.14f*2.f; v+=step)
-            {
-                sphereverts.push_back(R*glm::sin(u)*glm::cos(v));
-                sphereverts.push_back(R*glm::sin(v)*glm::sin(u));
-                sphereverts.push_back(R*glm::cos(u));
-                sphereverts.push_back(0.f);
-                sphereverts.push_back(0.f);
-                sphereverts.push_back(1.f);
-                sphereverts.push_back(-glm::sin(v)*glm::cos(u));
-                sphereverts.push_back(-glm::sin(v)*glm::sin(u));
-                sphereverts.push_back(-glm::cos(v));
-            }
-            
+            case RULED:
+                {
+                    if(ui.returnedCurves.size()>0)
+                    {
+                        //std::cout<<ruled.curve_a.controlPoints[0].x<<std::endl;
+                        //std::cout<<ruled.curve_b.controlPoints[0].x<<std::endl;
+                        //std::cout<<"ind "<<ui.returnedCurves[1]<<std::endl;
+                        if(ui.build)
+                        {
+                            ruled.curve_a = ui.curves[ui.returnedCurves[0]];
+                            ruled.curve_b = ui.curves[ui.returnedCurves[1]];
+                            ruled.build();
+                            ui.build = false;
+                        }
+                    }
+                    if(ui.showSurface) ruled.draw();
+                    if(ui.showCurves) ruled.drawCurves();
+                }
+                break;
+            case COONS:
+                {
+                    if(ui.returnedCurves.size()>0)
+                    {
+                        //std::cout<<ruled.curve_a.controlPoints[0].x<<std::endl;
+                        //std::cout<<ruled.curve_b.controlPoints[0].x<<std::endl;
+                        //std::cout<<"ind "<<ui.returnedCurves[1]<<std::endl;
+                        if(ui.build)
+                        {
+                            coons.step = ui.coonsStep;
+                            coons.p0 = ui.curves[ui.returnedCurves[0]];
+                            coons.p1 = ui.curves[ui.returnedCurves[1]];
+                            coons.q0 = ui.curves[ui.returnedCurves[2]];
+                            coons.q1 = ui.curves[ui.returnedCurves[3]];
+                            coons.build();
+                            ui.build = false;
+                        }
+                    }
+                    if(ui.showSurface) coons.draw();
+                    if(ui.showCurves) coons.drawCurves();
+
+                }
+                break;
+            case REVOLUTION:
+                {
+                    if(ui.returnedCurves.size()>0)
+                    {
+                        if(ui.build)
+                        {
+                            revolution.curve = ui.curves[ui.returnedCurves[0]];
+                            revolution.build();
+                            ui.build = false;
+                        }
+                    }
+                    if(ui.showSurface) revolution.draw();
+                    if(ui.showCurves) revolution.drawCurves();
+
+                }
+                break;
+            case ROTATIONAL:
+                {
+                    if(ui.returnedCurves.size()>0)
+                    {
+                        if(ui.build)
+                        {
+                            rotational.curve1 = ui.curves[ui.returnedCurves[0]];
+                            rotational.curve2 = ui.curves[ui.returnedCurves[1]];
+                            rotational.build();
+                            ui.build = false;
+                        }
+                    }
+                    if(ui.showSurface) rotational.draw();
+                    if(ui.showCurves) rotational.drawCurves();
+
+                }
+                break;
+         
         }
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphereverts.size(), sphereverts.data(), GL_STATIC_DRAW);
-        glPointSize(10.f);
-        glDrawArrays(GL_POINTS, 0, sphereverts.size()/3);
-        */
+
         
         glBindVertexArray(0);
 
