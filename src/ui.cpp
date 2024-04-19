@@ -430,7 +430,7 @@ bool UI::showConfig()
             break;
         case REVOLUTION:
             {
-            build = ImGui::SliderFloat("Draw Angle", &drawAngle, 0.f,360.f);
+            build |= ImGui::SliderFloat("Draw Angle", &drawAngle, 0.f,360.f);
             static int curve_a = 0; 
             if(surfaceType!= previous) {
                 std::fill(returnedCurves.begin(), returnedCurves.end(), 0);

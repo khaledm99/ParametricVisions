@@ -43,7 +43,6 @@ void Bspline::draw() {
 	gpuGeom.setCols(bsplineGeom.cols);
     gpuGeom.setNormals(bsplineGeom.verts);
 	gpuGeom.bind();
-    glLineWidth(20.f);
 	glDrawArrays(GL_LINE_STRIP, 0, GLsizei(bsplineGeom.verts.size()));
 
     // Draw Control Points
