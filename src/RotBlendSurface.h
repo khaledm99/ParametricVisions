@@ -31,6 +31,7 @@ public:
 	void draw();
     void drawCurves();
 	void drawMidline();
+    float maxAngle = 360.f;
 
 	std::vector<glm::vec3>& getControlPoints1() { return controlPoints1; }
 	std::vector<glm::vec3>& getControlPoints2() { return controlPoints2; }

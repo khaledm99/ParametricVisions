@@ -65,7 +65,7 @@ void RuledSurface::build()
     CPU_Geometry curveGeomB = curve_b.getGeom();
 
 
-    float color[3] = { 1.f, 0.f, 0.f }; // Color of new points
+    float color[3] = { 0.5f, 1.f, 0.5f }; // Color of new points
 
 
     float range_u = curve_a.knotSequence[curve_a.controlPoints.size()];

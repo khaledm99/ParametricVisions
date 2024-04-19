@@ -8,6 +8,7 @@ private:
 	CPU_Geometry_Index surfaceGeom;
 	GPU_Geometry_Index gpuGeom;
 public:
+    float maxAngle = 360.f;
     RevolutionSurface(){};
 	RevolutionSurface(Bspline& curve);
 	RevolutionSurface(const RevolutionSurface& other);

@@ -119,7 +119,8 @@ int main()
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(1.f, 1.f, 1.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Render
@@ -189,6 +190,7 @@ int main()
                 break;
             case REVOLUTION:
                 {
+                    revolution.maxAngle = ui.drawAngle;
                     if(ui.returnedCurves.size()>0)
                     {
                         if(ui.build)
@@ -205,6 +207,7 @@ int main()
                 break;
             case ROTATIONAL:
                 {
+                    rotational.maxAngle = ui.drawAngle;
                     if(ui.returnedCurves.size()>0)
                     {
                         if(ui.build)

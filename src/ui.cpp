@@ -113,8 +113,6 @@ bool UI::beginMainWindow()
             // Disabling fullscreen would allow the window to be moved to the front of other windows,
             // which we can't undo at the moment without finer window depth/z control.
             bool test;
-            ImGui::MenuItem("Fullscreen", NULL, &test);
-            ImGui::MenuItem("Padding", NULL, &test);
             ImGui::Separator();
 
             ImGui::Separator();
@@ -373,6 +371,7 @@ bool UI::showConfig()
             break;
         case ROTATIONAL:
             {
+            build |= ImGui::SliderFloat("Draw Angle", &drawAngle, 0.f,360.f);
             static int curve_a = 0; 
             static int curve_b = 0; 
             if(surfaceType!= previous) {
@@ -431,6 +430,7 @@ bool UI::showConfig()
             break;
         case REVOLUTION:
             {
+            build = ImGui::SliderFloat("Draw Angle", &drawAngle, 0.f,360.f);
             static int curve_a = 0; 
             if(surfaceType!= previous) {
                 std::fill(returnedCurves.begin(), returnedCurves.end(), 0);

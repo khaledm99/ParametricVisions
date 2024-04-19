@@ -51,7 +51,7 @@ int RotationalBlendSurface::build() {
 
 		glm::vec3 mc = glm::vec3(rotationMatrix * translationMatrix * glm::vec4(p1, 1.f));
 
-		for (int i = 0; i <= totalRotation; i+=rotationalIncAngle) {
+		for (float i = 0; i <= maxAngle; i+=rotationalIncAngle) {
 			glm::mat4 yRot = glm::rotate(glm::mat4(1.0f), glm::radians((float)i), glm::vec3(0.0f, 1.0f, 0.f));
 			glm::vec4 nC = glm::inverse(translationMatrix) * glm::inverse(rotationMatrix)* yRot * glm::vec4(mc, 1.f);
 			surfaceGeom.verts.push_back(glm::vec3(nC));

@@ -29,6 +29,7 @@ class UI {
         bool build = false;
         int perspective = 0;
         float viewDistance = -5.f;
+        float drawAngle = 360.f;
         float yaw = 0.f;
         float pitch = 0.f;
         Surface surfaceType = NONE;

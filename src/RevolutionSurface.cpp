@@ -39,7 +39,7 @@ void RevolutionSurface::build() {
 	surfaceGeom.normals.clear();
 	surfaceGeom.indices.clear();
 
-	for (int i = 0; i < 366; i+=2) {
+	for (float i = 0; i < maxAngle+6; i+=2) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians((float)i), glm::vec3(0.0f, 1.0f, 0.0f));
 		for (int j = 0; j < curveGeom.verts.size(); j++) {
 			glm::vec3 vert = glm::vec3(rotationMatrix * glm::vec4(curveGeom.verts.at(j), 1.0f));
